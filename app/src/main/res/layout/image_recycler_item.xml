@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:src="@tools:sample/backgrounds/scenic"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:background="@color/black_background"/>
 
     </androidx.cardview.widget.CardView>
 

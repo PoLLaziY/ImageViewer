@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/imageViewPagerFragment">
+
+    <fragment
+        android:id="@+id/imageViewPagerFragment"
+        android:name="com.example.imageviewer.ImageViewPagerFragment"
+        android:label="fragment_image_view_pager"
+        tools:layout="@layout/fragment_image_view_pager" >
+        <action
+            android:id="@+id/action_random_to_search"
+            app:destination="@id/searchWhithImageRecyclerFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/searchWhithImageRecyclerFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_random_to_favorite"
+            app:destination="@id/favoriteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/favoriteFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchWhithImageRecyclerFragment"
+        android:name="com.example.imageviewer.SearchWhithImageRecyclerFragment"
+        android:label="fragment_search_whith_image_recycler"
+        tools:layout="@layout/fragment_search_whith_image_recycler" >
+        <action
+            android:id="@+id/action_search_to_random"
+            app:destination="@id/imageViewPagerFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/imageViewPagerFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_search_to_favorite"
+            app:destination="@id/favoriteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/favoriteFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.imageviewer.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favorite_to_random"
+            app:destination="@id/imageViewPagerFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/imageViewPagerFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_favorite_to_search"
+            app:destination="@id/searchWhithImageRecyclerFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/searchWhithImageRecyclerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

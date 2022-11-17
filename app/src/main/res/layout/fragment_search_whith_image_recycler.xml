@@ -7,23 +7,18 @@
     android:orientation="vertical"
     tools:context=".SearchWhithImageRecyclerFragment">
 
-    <LinearLayout
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:translationZ="16dp"
+    android:backgroundTint="@color/grey">
+
+    <SearchView
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layoutDirection="rtl">
+        android:layout_height="wrap_content" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layoutDirection="ltr"/>
-
-
-    </LinearLayout>
+</androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
