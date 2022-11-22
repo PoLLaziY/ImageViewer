@@ -1,12 +1,13 @@
-package com.example.imageviewer
+package com.example.imageviewer.view.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.imageviewer.R
 
-class ImageViewPagerFragment : Fragment() {
+class SearchFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +17,6 @@ class ImageViewPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.opened_image, container, false)
+        return inflater.inflate(R.layout.fragment_search_whith_image_recycler, container, false)
     }
 }

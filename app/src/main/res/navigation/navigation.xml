@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/imageViewPagerFragment"
-        android:name="com.example.imageviewer.ImageViewPagerFragment"
+        android:name="com.example.imageviewer.view.fragment.ImageViewPagerFragment"
         android:label="fragment_image_view_pager"
         tools:layout="@layout/fragment_image_view_pager" >
         <action
@@ -18,8 +18,7 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/searchWhithImageRecyclerFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_random_to_favorite"
             app:destination="@id/favoriteFragment"
@@ -28,12 +27,11 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/favoriteFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/searchWhithImageRecyclerFragment"
-        android:name="com.example.imageviewer.SearchWhithImageRecyclerFragment"
+        android:name="com.example.imageviewer.view.fragment.SearchFragment"
         android:label="fragment_search_whith_image_recycler"
         tools:layout="@layout/fragment_search_whith_image_recycler" >
         <action
@@ -44,8 +42,7 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/imageViewPagerFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_search_to_favorite"
             app:destination="@id/favoriteFragment"
@@ -54,12 +51,11 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/favoriteFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.example.imageviewer.FavoriteFragment"
+        android:name="com.example.imageviewer.view.fragment.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" >
         <action
@@ -70,8 +66,7 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/imageViewPagerFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_favorite_to_search"
             app:destination="@id/searchWhithImageRecyclerFragment"
@@ -80,7 +75,6 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/searchWhithImageRecyclerFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
 </navigation>

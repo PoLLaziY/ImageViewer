@@ -1,9 +1,10 @@
-package com.example.imageviewer
+package com.example.imageviewer.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.navigation.fragment.findNavController
+import com.example.imageviewer.R
 import com.example.imageviewer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateTo(@IdRes navigationItemId: Int) {
-        //Обратное направление
         when (activeFragment) {
             R.id.search -> {
                 when (navigationItemId) {
