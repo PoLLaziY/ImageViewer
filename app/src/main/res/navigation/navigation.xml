@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/imageViewPagerFragment"
-        android:name="com.example.imageviewer.view.fragment.ImageViewPagerFragment"
+        android:name="com.example.imageviewer.view.fragment.ImagePagerFragment"
         android:label="fragment_image_view_pager"
-        tools:layout="@layout/fragment_image_view_pager" >
+        tools:layout="@layout/fragment_image_pager" >
         <action
             android:id="@+id/action_random_to_search"
             app:destination="@id/searchWhithImageRecyclerFragment"

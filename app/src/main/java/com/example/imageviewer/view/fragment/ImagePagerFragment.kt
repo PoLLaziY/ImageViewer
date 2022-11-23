@@ -6,36 +6,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.imageviewer.databinding.FragmentImageViewPagerBinding
+import androidx.lifecycle.lifecycleScope
+import com.example.imageviewer.databinding.FragmentImagePagerBinding
 import com.example.imageviewer.view.ImagePagerAdapter
 import com.example.imageviewer.view.ImagePagerLayoutManager
+import com.example.imageviewer.viewModel.ImagePagerViewModel
 import com.example.imageviewer.web.WebServiceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ImageViewPagerFragment : Fragment() {
+class ImagePagerFragment : Fragment() {
 
     private val binding by lazy {
-        FragmentImageViewPagerBinding.inflate(layoutInflater)
+        FragmentImagePagerBinding.inflate(layoutInflater)
+    }
+
+    private val viewModel: ImagePagerViewModel by lazy {
+        ImagePagerViewModel(WebServiceImpl())
+    }
+
+    private val recyclerAdapter: ImagePagerAdapter by lazy {
+        ImagePagerAdapter(binding.recycler)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val service = WebServiceImpl()
-
         val layoutManager = ImagePagerLayoutManager(requireContext())
 
-        val adapter = ImagePagerAdapter(binding.recycler)
         binding.recycler.layoutManager = layoutManager
-        binding.recycler.adapter = adapter
+        binding.recycler.adapter = recyclerAdapter
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val list = service.getNewPublicImages(0, 10)
-            Log.i("Web", "$list")
-            CoroutineScope(Dispatchers.Main).launch {
-                adapter.list = list
+        lifecycleScope.launch {
+            viewModel.images.collectLatest {
+                recyclerAdapter.submitData(it)
             }
         }
     }

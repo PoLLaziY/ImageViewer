@@ -10,10 +10,12 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.1835" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.1835" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/drawable/ic_baseline_keyboard_arrow_down_24.xml" value="0.1835" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1305" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/drawable/round_botton_background.xml" value="0.1885" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/favorite_recycler_item.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/fragment_favorite.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/fragment_image_pager.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/fragment_image_view_pager.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/fragment_search_whith_image_recycler.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/image_recycler_item.xml" value="0.2682291666666667" />

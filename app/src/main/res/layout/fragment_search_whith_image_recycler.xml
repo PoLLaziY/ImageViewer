@@ -11,12 +11,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:translationZ="16dp"
-    android:backgroundTint="@color/grey">
+    android:backgroundTint="@color/black_background">
 
     <SearchView
         android:layout_margin="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:searchIcon="@drawable/ic_baseline_search_24"/>
 
 </androidx.cardview.widget.CardView>
 
