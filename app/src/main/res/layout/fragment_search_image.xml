@@ -14,18 +14,32 @@
     android:backgroundTint="@color/black_background">
 
     <SearchView
+        android:id="@+id/searchView"
         android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:searchIcon="@drawable/ic_baseline_search_24"/>
 
 </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
+    <FrameLayout
+        android:id="@+id/recyclerRoot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        tools:listitem="@layout/image_recycler_item"/>
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:listitem="@layout/image_recycler_item" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/openedRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            tools:listitem="@layout/opened_image"/>
+    </FrameLayout>
 
 </LinearLayout>

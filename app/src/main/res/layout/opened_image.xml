@@ -28,7 +28,7 @@
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/upButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_margin="8dp"
@@ -49,7 +49,8 @@
                 android:src="@drawable/ic_baseline_arrow_drop_down_circle_24"
                 app:layout_constraintBottom_toTopOf="@+id/shareButton"
                 app:layout_constraintEnd_toEndOf="@+id/shareButton"
-                app:layout_constraintStart_toStartOf="@+id/shareButton" />
+                app:layout_constraintStart_toStartOf="@+id/shareButton"
+                android:stateListAnimator="@animator/button_selector" />
 
             <ImageButton
                 android:id="@+id/shareButton"
@@ -61,7 +62,8 @@
                 android:src="@drawable/ic_baseline_share_24"
                 app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:stateListAnimator="@animator/button_selector" />
 
 
             <ImageButton
@@ -74,7 +76,8 @@
                 android:src="@drawable/ic_baseline_favorite_border_24"
                 app:layout_constraintBottom_toBottomOf="@+id/likeButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:stateListAnimator="@animator/button_selector" />
 
             <ImageButton
                 android:id="@+id/previousButton"
@@ -93,13 +96,14 @@
                 android:id="@+id/likeButton"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_margin="8dp"
+                android:layout_margin="24dp"
                 android:background="@drawable/round_button_background"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_baseline_local_fire_department_24"
-                app:layout_constraintBottom_toTopOf="@+id/imageView2"
+                app:layout_constraintBottom_toTopOf="@+id/downButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:stateListAnimator="@animator/button_selector"/>
 
             <ImageButton
                 android:id="@+id/nextButton"
@@ -117,10 +121,11 @@
             </ImageButton>
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/downButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_margin="8dp"
+                android:visibility="visible"
                 android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
