@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".view.MainActivity"
     android:background="@color/grey"
     app:barrierDirection="bottom">
 
@@ -31,7 +31,7 @@
             android:id="@+id/bottomNavigationBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grey"
+            android:background="@color/black_background"
             app:itemIconTint="@color/bottom_bar_items_colors"
             app:itemTextColor="@color/bottom_bar_items_colors"
             app:menu="@menu/bottom_navigation_view_menu"/>
