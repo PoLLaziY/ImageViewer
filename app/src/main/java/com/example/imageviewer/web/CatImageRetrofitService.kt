@@ -3,7 +3,7 @@ package com.example.imageviewer.web
 import com.example.imageviewer.domain.Breed
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.domain.Category
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -11,56 +11,56 @@ import retrofit2.http.Query
 interface CatImageRetrofitService {
 
     @GET("images/search")
-    fun getAllPublicImages(
+    suspend fun getAllPublicImages(
         @Query("api_key") apiKey: String,
         @Query("limit") onPage: Int,
         @Query("page") page: Int
-    ): Call<List<CatImage>>
+    ): Response<List<CatImage>>
 
     @GET("images/search")
-    fun searchPublicImages(
+    suspend fun searchPublicImages(
         @Query("api_key") apiKey: String,
         @Query("limit") onPage: Int,
         @Query("page") page: Int,
         @Query("category_ids") categoryIds: Int,
         @Query("breed_id") breedId: String
-    ): Call<List<CatImage>>
+    ): Response<List<CatImage>>
 
 
     @GET("images/search")
-    fun searchPublicImages(
+    suspend fun searchPublicImages(
         @Query("api_key") apiKey: String,
         @Query("limit") onPage: Int,
         @Query("page") page: Int,
         @Query("breed_id") breedId: String
-    ): Call<List<CatImage>>
+    ): Response<List<CatImage>>
 
 
     @GET("images/search")
-    fun searchPublicImages(
+    suspend fun searchPublicImages(
         @Query("api_key") apiKey: String,
         @Query("limit") onPage: Int,
         @Query("page") page: Int,
         @Query("category_ids") categoryIds: Int
-    ): Call<List<CatImage>>
+    ): Response<List<CatImage>>
 
     @GET("images/{image_id}")
-    fun getImage(
+    suspend fun getImage(
         @Path("image_id") imageId: String,
         @Query("api_key") apiKey: String
-    ): Call<CatImage>
+    ): Response<CatImage>
 
     @GET("breeds")
-    fun getAllBreeds(
+    suspend fun getAllBreeds(
         @Query("api_key") apiKey: String,
         @Query("limit") onPage: Int,
         @Query("page") page: Int,
-    ): Call<List<Breed>>
+    ): Response<List<Breed>>
 
     @GET("categories")
-    fun getAllCategories(
+    suspend fun getAllCategories(
         @Query("api_key") apiKey: String,
         @Query("limit") onPage: Int,
         @Query("page") page: Int,
-    ): Call<List<Category>>
+    ): Response<List<Category>>
 }
