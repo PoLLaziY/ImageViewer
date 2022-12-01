@@ -4,12 +4,14 @@ import com.example.imageviewer.BuildConfig
 import com.example.imageviewer.domain.Breed
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.domain.Category
+import com.example.imageviewer.source.ImageSource
+import com.example.imageviewer.utils.SearchAlgorithm
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-interface WebService {
+interface WebService : ImageSource {
     suspend fun getNewPublicImages(page: Int, onPage: Int): List<CatImage>?
     suspend fun searchPublicImages(
         page: Int,
@@ -21,9 +23,15 @@ interface WebService {
     suspend fun getImage(id: String): CatImage?
     suspend fun getAllBreeds(): List<Breed>?
     suspend fun getAllCategories(): List<Category>?
+    fun setSearchAlgorithm(searchAlgorithm: SearchAlgorithm)
 }
 
-class WebServiceImpl : WebService {
+class WebServiceImpl() : WebService {
+    private var _searchAlgorithm: SearchAlgorithm? = null
+
+    override fun setSearchAlgorithm(searchAlgorithm: SearchAlgorithm) {
+        _searchAlgorithm = searchAlgorithm
+    }
 
     private val interceptor by lazy {
         HttpLoggingInterceptor().apply {
@@ -70,6 +78,16 @@ class WebServiceImpl : WebService {
         ).body()
     }
 
+    override suspend fun searchImages(page: Int, onPage: Int, query: String?): List<CatImage>? {
+        val breedId = if (query == null) null else (_searchAlgorithm
+            ?: throw Exception("WebService don't have a SearchAlgorithm")).getBreedsFrom(query)
+            ?.firstOrNull()?.id
+        val categoryId = if (query == null) null else (_searchAlgorithm
+            ?: throw Exception("WebService don't have a SearchAlgorithm")).getCategoriesFrom(query)
+            ?.firstOrNull()?.id
+        return searchPublicImages(page, onPage, categoryId, breedId)
+    }
+
     override suspend fun searchPublicImages(
         page: Int,
         onPage: Int,
@@ -103,4 +121,5 @@ class WebServiceImpl : WebService {
             )
         }.body()
     }
+
 }

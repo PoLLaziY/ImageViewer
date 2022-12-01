@@ -6,9 +6,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.imageviewer.domain.Breed
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.domain.Category
 import com.example.imageviewer.source.CatImagePagingSource
 import com.example.imageviewer.source.web.WebService
+import com.example.imageviewer.utils.SearchAlgorithm
+import com.example.imageviewer.utils.SearchAlgorithmImpl
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

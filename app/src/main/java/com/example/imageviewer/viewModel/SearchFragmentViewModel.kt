@@ -12,12 +12,17 @@ import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.domain.Category
 import com.example.imageviewer.source.CatImagePagingSource
 import com.example.imageviewer.source.web.WebService
+import com.example.imageviewer.source.web.WebServiceImpl
+import com.example.imageviewer.utils.SearchAlgorithm
+import com.example.imageviewer.utils.SearchAlgorithmImpl
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class SearchFragmentViewModel(private val webService: WebService) : ViewModel() {
+class SearchFragmentViewModel(
+    private val webService: WebService
+) : ViewModel() {
 
     private val breeds: StateFlow<List<Breed>?> =
         MutableStateFlow<List<Breed>?>(null).also { state ->
@@ -33,6 +38,10 @@ class SearchFragmentViewModel(private val webService: WebService) : ViewModel() 
             }
         }
 
+    private val searchAlgorithm: SearchAlgorithm = SearchAlgorithmImpl(breeds, categories).apply {
+        webService.setSearchAlgorithm(this)
+    }
+
     private var query: String? = null
         set(value) {
             viewModelScope.launch {
@@ -47,74 +56,20 @@ class SearchFragmentViewModel(private val webService: WebService) : ViewModel() 
     private var imagePagingSource: CatImagePagingSource? = null
         get() {
             if (field == null || field?.invalid != false) {
-                val tags = getTagsFromQuery(query)
-                field = CatImagePagingSource(webService, getBreedFromTags(tags)?.id, getCategoryFromTags(tags)?.id)
+                field = CatImagePagingSource(webService, query)
                 return field
             }
             return field
         }
 
     val images: StateFlow<PagingData<CatImage>> = Pager(PagingConfig(pageSize = 20)) {
-        imagePagingSource?: CatImagePagingSource(webService)
-    }.flow.cachedIn(viewModelScope).stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+        imagePagingSource ?: CatImagePagingSource(webService)
+    }.flow.cachedIn(viewModelScope)
+        .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     fun search(query: String?) {
         Log.i("SearchFragment", "ViewModel get = $query")
         this.query = query
-    }
-
-    private fun getBreedFromTags(tags: List<String>?): Breed? {
-        if (tags == null) return null
-        if (breeds.value == null) return null
-        val result: Breed? = breeds.value!!.firstOrNull() { breed ->
-            tags.any { tag ->
-                if (breed.name == null) return@any false
-                breed.name!!.contains(tag, true)
-                        || tag.contains(breed.name!!, true)
-            }
-        } ?: breeds.value!!.firstOrNull() { breed ->
-            tags.any { tag ->
-                if (breed.altNames == null) return@any false
-                breed.altNames!!.contains(tag, true)
-                        || tag.contains(breed.altNames!!, true)
-            }
-        } ?: breeds.value!!.firstOrNull() { breed ->
-            tags.any { tag ->
-                if (breed.temperament == null) return@any false
-                breed.temperament!!.contains(tag, true)
-                        || tag.contains(breed.temperament!!, true)
-            }
-        }
-        return result
-    }
-
-    private fun getCategoryFromTags(tags: List<String>?): Category? {
-        if (tags == null) return null
-        if (categories.value == null) return null
-        return categories.value!!.firstOrNull() { category ->
-            tags.any { tag ->
-                (category.name?.contains(tag, true) ?: false)
-                        || if (category.name == null) false else tag.contains(category.name!!, true)
-            }
-        }
-    }
-
-    private fun getTagsFromQuery(query: String?): List<String>? {
-        if (query.isNullOrEmpty()) return null
-        var substringsStartIndex = 0
-        val tags = mutableListOf<String>()
-        query.toCharArray().forEachIndexed { index, c ->
-            if (c == ' ' || c == ',' || c == '.' || c == '/') {
-                if (substringsStartIndex < index) {
-                    tags.add(query.substring(substringsStartIndex, index).lowercase())
-                }
-                substringsStartIndex = index + 1
-            }
-            if (index == query.lastIndex) {
-                tags.add(query.substring(substringsStartIndex, index + 1).lowercase())
-            }
-        }
-        return tags
     }
 
     private suspend fun waitInitParams(): Job =
