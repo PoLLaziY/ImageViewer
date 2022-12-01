@@ -1,11 +1,11 @@
-package com.example.imageviewer.view
+package com.example.imageviewer.source
 
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.web.ApiConst
-import com.example.imageviewer.web.WebService
+import com.example.imageviewer.source.web.ApiConst
+import com.example.imageviewer.source.web.WebService
 
 class CatImagePagingSource(
     private val service: WebService,

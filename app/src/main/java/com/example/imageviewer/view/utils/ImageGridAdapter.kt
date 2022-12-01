@@ -1,4 +1,4 @@
-package com.example.imageviewer.view
+package com.example.imageviewer.view.utils
 
 import android.net.Uri
 import android.view.LayoutInflater

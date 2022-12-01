@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import com.example.imageviewer.databinding.FragmentSearchImageBinding
-import com.example.imageviewer.view.ImagePagerAdapter
-import com.example.imageviewer.view.ImagePagerLayoutManager
-import com.example.imageviewer.view.ImageGridAdapter
-import com.example.imageviewer.view.ImageGridDecorator
+import com.example.imageviewer.view.utils.ImagePagerAdapter
+import com.example.imageviewer.view.utils.ImagePagerLayoutManager
+import com.example.imageviewer.view.utils.ImageGridAdapter
+import com.example.imageviewer.view.utils.ImageGridDecorator
 import com.example.imageviewer.viewModel.SearchFragmentViewModel
-import com.example.imageviewer.web.WebServiceImpl
+import com.example.imageviewer.source.web.WebServiceImpl
 import kotlinx.coroutines.launch
 
 class SearchFragment() : Fragment() {
@@ -68,6 +68,14 @@ class SearchFragment() : Fragment() {
             viewModel.images.collect {
                 gridRecyclerAdapter.submitData(it)
             }
+        }
+
+        binding.progressBar.visibility =
+            if (gridRecyclerAdapter.itemCount == 0) View.VISIBLE else View.GONE
+
+        gridRecyclerAdapter.addOnPagesUpdatedListener {
+            binding.progressBar.visibility =
+                if (gridRecyclerAdapter.itemCount == 0) View.VISIBLE else View.GONE
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.imageviewer.web
+package com.example.imageviewer.source.web
 
 import com.example.imageviewer.BuildConfig
 import com.example.imageviewer.domain.Breed

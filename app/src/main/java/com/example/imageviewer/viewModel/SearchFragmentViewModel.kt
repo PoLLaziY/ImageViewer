@@ -10,9 +10,8 @@ import androidx.paging.cachedIn
 import com.example.imageviewer.domain.Breed
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.domain.Category
-import com.example.imageviewer.view.CatImagePagingSource
-import com.example.imageviewer.web.ApiConst
-import com.example.imageviewer.web.WebService
+import com.example.imageviewer.source.CatImagePagingSource
+import com.example.imageviewer.source.web.WebService
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.coroutines.resume

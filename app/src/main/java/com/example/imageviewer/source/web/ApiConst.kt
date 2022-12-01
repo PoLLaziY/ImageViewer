@@ -1,4 +1,4 @@
-package com.example.imageviewer.web
+package com.example.imageviewer.source.web
 
 object ApiConst {
     const val KEY = "live_xUoUx0hkUuDqu69RhwTd4V3GwhwVfgZzpsCY5VLZewYnmKUsu5RDRwZyKX98EvbM"
