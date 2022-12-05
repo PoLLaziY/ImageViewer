@@ -10,6 +10,8 @@ import com.example.App
 import com.example.imageviewer.databinding.FragmentFavoriteBinding
 import com.example.imageviewer.view.utils.ImageGridAdapter
 import com.example.imageviewer.view.utils.ImageGridDecorator
+import com.example.imageviewer.view.utils.ImagePagerAdapter
+import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment() {
@@ -23,7 +25,16 @@ class FavoriteFragment : Fragment() {
     }
 
     private val gridAdapter by lazy {
-        ImageGridAdapter()
+        ImageGridAdapter(openImage = openImage())
+    }
+
+    private val openedRecyclerAdapter by lazy {
+        ImagePagerAdapter(binding.openedRecycler,
+            upButtonListener = closeImage())
+    }
+
+    private val openedRecyclerLayoutManager by lazy {
+        ImagePagerLayoutManager(requireContext())
     }
 
     private val itemDecorator by lazy {
@@ -33,12 +44,22 @@ class FavoriteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.recycler.adapter = gridAdapter
-        binding.recycler.addItemDecoration(itemDecorator)
+        binding.gridRecycler.adapter = gridAdapter
+        binding.gridRecycler.addItemDecoration(itemDecorator)
+
+        binding.openedRecycler.adapter = openedRecyclerAdapter
+        binding.openedRecycler.layoutManager = openedRecyclerLayoutManager
+        binding.openedRecycler.visibility = View.GONE
 
         lifecycleScope.launch {
             viewModel.images.collect {
                 gridAdapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.images.collect {
+                openedRecyclerAdapter.submitData(it)
             }
         }
     }
@@ -48,5 +69,14 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return binding.root
+    }
+
+    private fun openImage(): (Int) -> Unit = {
+        binding.openedRecycler.scrollToPosition(it)
+        binding.openedRecycler.visibility = View.VISIBLE
+    }
+
+    private fun closeImage(): () -> Unit = {
+        binding.openedRecycler.visibility = View.GONE
     }
 }
