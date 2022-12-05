@@ -11,7 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-interface WebService : ImageSource {
+interface WebService {
     suspend fun getNewPublicImages(page: Int, onPage: Int): List<CatImage>?
     suspend fun searchPublicImages(
         page: Int,
@@ -23,15 +23,11 @@ interface WebService : ImageSource {
     suspend fun getImage(id: String): CatImage?
     suspend fun getAllBreeds(): List<Breed>?
     suspend fun getAllCategories(): List<Category>?
-    fun setSearchAlgorithm(searchAlgorithm: SearchAlgorithm)
+    fun imageSource(searchAlgorithm: SearchAlgorithm? = null): ImageSource
+    var onImagesLoaded: ((List<CatImage>) -> Unit)?
 }
 
 class WebServiceImpl() : WebService {
-    private var _searchAlgorithm: SearchAlgorithm? = null
-
-    override fun setSearchAlgorithm(searchAlgorithm: SearchAlgorithm) {
-        _searchAlgorithm = searchAlgorithm
-    }
 
     private val interceptor by lazy {
         HttpLoggingInterceptor().apply {
@@ -56,36 +52,64 @@ class WebServiceImpl() : WebService {
         retrofit.create(CatImageRetrofitService::class.java)
     }
 
+    override var onImagesLoaded: ((List<CatImage>) -> Unit)? = null
+
     override suspend fun getNewPublicImages(page: Int, onPage: Int): List<CatImage>? {
-        return service.getAllPublicImages(apiKey = ApiConst.KEY, page = page, onPage = onPage)
-            .body()
+        return try {
+            service.getAllPublicImages(apiKey = ApiConst.KEY, page = page, onPage = onPage)
+                .body()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override suspend fun getImage(id: String): CatImage? {
-        return service.getImage(imageId = id, apiKey = ApiConst.KEY).body()
+        return try {
+            service.getImage(imageId = id, apiKey = ApiConst.KEY).body()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override suspend fun getAllBreeds(): List<Breed>? {
-        return service.getAllBreeds(ApiConst.KEY, ApiConst.PAGE_MAX_SIZE, ApiConst.FIRST_PAGE_INDEX)
-            .body()
+        return try {
+            service.getAllBreeds(ApiConst.KEY, ApiConst.PAGE_MAX_SIZE, ApiConst.FIRST_PAGE_INDEX)
+                .body()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override suspend fun getAllCategories(): List<Category>? {
-        return service.getAllCategories(
-            ApiConst.KEY,
-            ApiConst.PAGE_MAX_SIZE,
-            ApiConst.FIRST_PAGE_INDEX
-        ).body()
+        return try {
+            service.getAllCategories(
+                ApiConst.KEY,
+                ApiConst.PAGE_MAX_SIZE,
+                ApiConst.FIRST_PAGE_INDEX
+            ).body()
+        } catch (e: Exception) {
+            null
+        }
     }
 
-    override suspend fun searchImages(page: Int, onPage: Int, query: String?): List<CatImage>? {
-        val breedId = if (query == null) null else (_searchAlgorithm
-            ?: throw Exception("WebService don't have a SearchAlgorithm")).getBreedsFrom(query)
-            ?.firstOrNull()?.id
-        val categoryId = if (query == null) null else (_searchAlgorithm
-            ?: throw Exception("WebService don't have a SearchAlgorithm")).getCategoriesFrom(query)
-            ?.firstOrNull()?.id
-        return searchPublicImages(page, onPage, categoryId, breedId)
+    override fun imageSource(searchAlgorithm: SearchAlgorithm?): ImageSource {
+        return object : ImageSource {
+            override suspend fun searchImages(
+                page: Int,
+                onPage: Int,
+                query: String?
+            ): List<CatImage>? {
+                val breedId = if (query == null) null else searchAlgorithm?.getBreedsFrom(
+                    query
+                )
+                    ?.firstOrNull()?.id
+                val categoryId = if (query == null) null else searchAlgorithm?.getCategoriesFrom(
+                    query
+                )
+                    ?.firstOrNull()?.id
+                return searchPublicImages(page, onPage, categoryId, breedId)
+            }
+        }
     }
 
     override suspend fun searchPublicImages(
@@ -94,32 +118,38 @@ class WebServiceImpl() : WebService {
         categoryIds: Int?,
         breedId: String?
     ): List<CatImage>? {
-        return when {
-            categoryIds == null && breedId == null -> service.getAllPublicImages(
-                ApiConst.KEY,
-                onPage,
-                page
-            )
-            categoryIds == null -> service.searchPublicImages(
-                ApiConst.KEY,
-                onPage,
-                page,
-                breedId!!
-            )
-            breedId == null -> service.searchPublicImages(
-                ApiConst.KEY,
-                onPage,
-                page,
-                categoryIds
-            )
-            else -> service.searchPublicImages(
-                ApiConst.KEY,
-                onPage,
-                page,
-                categoryIds,
-                breedId
-            )
-        }.body()
+        val result = try {
+            when {
+                categoryIds == null && breedId == null -> service.getAllPublicImages(
+                    ApiConst.KEY,
+                    onPage,
+                    page
+                )
+                categoryIds == null -> service.searchPublicImages(
+                    ApiConst.KEY,
+                    onPage,
+                    page,
+                    breedId!!
+                )
+                breedId == null -> service.searchPublicImages(
+                    ApiConst.KEY,
+                    onPage,
+                    page,
+                    categoryIds
+                )
+                else -> service.searchPublicImages(
+                    ApiConst.KEY,
+                    onPage,
+                    page,
+                    categoryIds,
+                    breedId
+                )
+            }.body()
+        } catch (e: Exception) {
+            null
+        }
+        if (result != null) onImagesLoaded?.invoke(result)
+        return result
     }
 
 }

@@ -12,30 +12,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
-class SearchFragmentViewModel(
-    private val repository: ImageRepository
-) : ViewModel() {
-
-    var query: String?
-        set(value) {
-            repository.queryForSearch = value
-        }
-        get() = repository.queryForSearch
+class FavoriteFragmentViewModel(private val repository: ImageRepository): ViewModel() {
 
     val images: StateFlow<PagingData<CatImage>> =
         Pager(PagingConfig(pageSize = 20)) {
-            repository.foundImagesSourceFactory!!
+            repository.favoriteImagesFactory!!
         }.flow.cachedIn(viewModelScope)
             .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
-
-    val favoriteButtonListener: (image: CatImage) -> Unit = {
-        it.isFavorite = !it.isFavorite
-        repository.update(it)
-    }
-
-    val likeButtonListener: (image: CatImage) -> Unit = {
-        it.liked = !it.liked
-        repository.update(it)
-    }
-
 }

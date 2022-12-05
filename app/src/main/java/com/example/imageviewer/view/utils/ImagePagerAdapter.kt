@@ -15,9 +15,10 @@ import com.example.imageviewer.domain.CatImage
 class ImagePagerAdapter(
     private val recycler: RecyclerView,
     private inline val upButtonListener: (() -> Unit)? = null,
-    private inline val downButtonListener: (() -> Unit)? = null
-) :
-    PagingDataAdapter<CatImage, ImagePagerAdapter.ImageHolder>(ImageDiffItemCallback) {
+    private inline val downButtonListener: (() -> Unit)? = null,
+    private inline val favoriteButtonListener: ((image: CatImage) -> Unit)? = null,
+    private inline val likeButtonListener: ((image: CatImage) -> Unit)? = null
+) : PagingDataAdapter<CatImage, ImagePagerAdapter.ImageHolder>(ImageDiffItemCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,6 +34,7 @@ class ImagePagerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         private var buttonFaded = true
+        private var image: CatImage? = null
 
         init {
 
@@ -57,9 +59,18 @@ class ImagePagerAdapter(
             binding.fadeButton.setOnClickListener {
                 onFadeButtonClick(500L)
             }
+            binding.favoriteButton.setOnClickListener {
+                if (image == null) return@setOnClickListener
+                favoriteButtonListener?.invoke(image!!)
+            }
+            binding.likeButton.setOnClickListener {
+                if (image == null) return@setOnClickListener
+                likeButtonListener?.invoke(image!!)
+            }
         }
 
         fun onBind(catImage: CatImage?) {
+            image = catImage
             if (!buttonFaded) {
                 onFadeButtonClick(0)
             }
@@ -86,8 +97,7 @@ object ImageDiffItemCallback : DiffUtil.ItemCallback<CatImage>() {
     override fun areItemsTheSame(oldItem: CatImage, newItem: CatImage) = oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: CatImage, newItem: CatImage) =
-        oldItem.url == newItem.url && oldItem.categories == newItem.categories
-                && oldItem.breeds == newItem.breeds
+        oldItem.url == newItem.url
 }
 
 val Int.px: Float
