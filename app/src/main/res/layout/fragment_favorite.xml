@@ -8,4 +8,4 @@
     tools:context=".view.fragment.FavoriteFragment"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     app:spanCount="3"
-    tools:listitem="@layout/favorite_recycler_item"/>
+    tools:listitem="@layout/image_recycler_item"/>

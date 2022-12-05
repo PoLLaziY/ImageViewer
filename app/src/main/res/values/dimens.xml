@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_activity_bottom_bar_card_elevation">64dp</dimen>
+    <dimen name="search_fragment_search_view_elevation">16dp</dimen>
+    <dimen name="search_fragment_search_view_margin">8dp</dimen>
+    <dimen name="recycler_item_card_corner_radius">16dp</dimen>
+    <dimen name="opened_image_margin">16dp</dimen>
+    <dimen name="opened_image_card_corner_radius">16dp</dimen>
+    <dimen name="opened_image_elevation">16dp</dimen>
+    <dimen name="opened_image_swipe_button_dimen">30dp</dimen>
+    <dimen name="opened_image_swipe_button_margin">8dp</dimen>
+    <dimen name="opened_image_button_upper_dimen">30dp</dimen>
+    <dimen name="opened_image_upper_margin">8dp</dimen>
+    <dimen name="opened_image_iteract_button_dimen">60dp</dimen>
+</resources>
