@@ -11,6 +11,7 @@ import com.example.imageviewer.source.ImageRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import java.util.*
 
 open class ImagePagerViewModel(
     private val repository: ImageRepository
@@ -23,12 +24,12 @@ open class ImagePagerViewModel(
             .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     val favoriteButtonListener: (image: CatImage) -> Unit = {
-        it.isFavorite = !it.isFavorite
+        it.favorite = if (it.favorite > 0) 0 else Date().time
         repository.update(it)
     }
 
     val likeButtonListener: (image: CatImage) -> Unit = {
-        it.liked = !it.liked
+        it.liked = if (it.liked > 0) 0 else Date().time
         repository.update(it)
     }
 }

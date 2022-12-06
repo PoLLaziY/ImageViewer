@@ -1,6 +1,8 @@
 package com.example.imageviewer.source.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.source.ImageSource
@@ -50,5 +52,9 @@ class DbServiceImpl(val dao: CatImageDao) : DbService {
             }
         }
 
-    override val dbUpdate: LiveData<Unit> = dao.updateListener().map { Unit }
+    override val dbUpdate: LiveData<Unit> by lazy {
+        dao.updateListener().map {
+
+        }
+    }
 }

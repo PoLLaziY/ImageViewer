@@ -1,7 +1,9 @@
 package com.example.di.module
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Room
+import androidx.room.migration.AutoMigrationSpec
 import com.example.imageviewer.source.ImageRepository
 import com.example.imageviewer.source.data.CatImageDao
 import com.example.imageviewer.source.data.CatImageRoomDb
@@ -36,5 +38,7 @@ class CoreModule {
     @Singleton
     @Provides
     fun provideCatImageRoomDb(context: Context): CatImageRoomDb =
-        Room.databaseBuilder(context, CatImageRoomDb::class.java, "cat_image_db").build()
+        Room.databaseBuilder(context, CatImageRoomDb::class.java, "cat_image_db")
+            .fallbackToDestructiveMigration()
+            .build()
 }
