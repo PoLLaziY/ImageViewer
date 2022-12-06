@@ -29,10 +29,10 @@ class SearchFragment() : Fragment() {
 
     private val openedRecyclerAdapter by lazy {
         ImagePagerAdapter(
-            binding.openedRecycler,
             upButtonListener = closeImage(),
             favoriteButtonListener = viewModel.favoriteButtonListener,
-            likeButtonListener = viewModel.likeButtonListener
+            likeButtonListener = viewModel.likeButtonListener,
+            onImageWatched = viewModel.onImageWatched
         )
     }
 

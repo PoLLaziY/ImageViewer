@@ -23,9 +23,9 @@ class ImagePagerFragment() : Fragment() {
 
     private val recyclerAdapter: ImagePagerAdapter by lazy {
         ImagePagerAdapter(
-            binding.recycler,
             favoriteButtonListener = viewModel.favoriteButtonListener,
-            likeButtonListener = viewModel.likeButtonListener
+            likeButtonListener = viewModel.likeButtonListener,
+            onImageWatched = viewModel.onImageWatched
         )
     }
 
@@ -58,6 +58,4 @@ class ImagePagerFragment() : Fragment() {
     ): View? {
         return binding.root
     }
-
-
 }

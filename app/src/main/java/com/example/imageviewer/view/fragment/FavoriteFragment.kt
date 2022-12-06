@@ -29,8 +29,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private val openedRecyclerAdapter by lazy {
-        ImagePagerAdapter(binding.openedRecycler,
-            upButtonListener = closeImage())
+        ImagePagerAdapter(upButtonListener = closeImage())
     }
 
     private val openedRecyclerLayoutManager by lazy {

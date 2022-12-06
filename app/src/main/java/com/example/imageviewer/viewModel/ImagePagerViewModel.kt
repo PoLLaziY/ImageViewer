@@ -32,4 +32,11 @@ open class ImagePagerViewModel(
         it.liked = if (it.liked > 0) 0 else Date().time
         repository.update(it)
     }
+
+    val onImageWatched: (image: CatImage?) -> Unit = {
+        if (it != null) {
+            it.watched = Date().time
+            repository.update(it)
+        }
+    }
 }

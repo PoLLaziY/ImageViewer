@@ -39,4 +39,10 @@ class SearchFragmentViewModel(
         repository.update(it)
     }
 
+    val onImageWatched: (image: CatImage?) -> Unit = {
+        if (it != null) {
+            it.watched = Date().time
+            repository.update(it)
+        }
+    }
 }
