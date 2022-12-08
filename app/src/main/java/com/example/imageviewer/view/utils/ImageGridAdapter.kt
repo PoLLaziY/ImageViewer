@@ -1,4 +1,4 @@
-package com.example.imageviewer.view
+package com.example.imageviewer.view.utils
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.imageviewer.databinding.ImageRecyclerItemBinding
 import com.example.imageviewer.domain.CatImage
 
-class ImageGridAdapter(private inline val openImage: (position: Int) -> Unit) :
+class ImageGridAdapter(private inline val openImage: ((position: Int) -> Unit)? = null) :
     PagingDataAdapter<CatImage, ImageGridAdapter.ImageHolder>(ImageDiffItemCallback) {
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
@@ -21,7 +21,7 @@ class ImageGridAdapter(private inline val openImage: (position: Int) -> Unit) :
         val binding = ImageRecyclerItemBinding.inflate(inflater, parent, false)
         val holder = ImageHolder(binding)
         holder.binding.root.setOnClickListener {
-            openImage.invoke(holder.absoluteAdapterPosition)
+            openImage?.invoke(holder.absoluteAdapterPosition)
         }
         return holder
     }

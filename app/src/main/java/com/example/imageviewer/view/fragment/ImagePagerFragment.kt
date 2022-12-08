@@ -6,27 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagingData
+import com.example.App
 import com.example.imageviewer.databinding.FragmentImagePagerBinding
-import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.view.ImagePagerAdapter
-import com.example.imageviewer.view.ImagePagerLayoutManager
+import com.example.imageviewer.view.utils.ImagePagerAdapter
+import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import com.example.imageviewer.viewModel.ImagePagerViewModel
-import com.example.imageviewer.web.WebServiceImpl
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ImagePagerFragment(images: StateFlow<PagingData<CatImage>>? = null) : Fragment() {
+class ImagePagerFragment() : Fragment() {
 
     private val binding by lazy {
         FragmentImagePagerBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: ImagePagerViewModel = ImagePagerViewModel(WebServiceImpl(), images)
+    private val viewModel: ImagePagerViewModel = App.appComponent.randomViewModel
 
     private val recyclerAdapter: ImagePagerAdapter by lazy {
-        ImagePagerAdapter(binding.recycler)
+        ImagePagerAdapter(
+            binding.recycler,
+            favoriteButtonListener = viewModel.favoriteButtonListener,
+            likeButtonListener = viewModel.likeButtonListener
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +41,14 @@ class ImagePagerFragment(images: StateFlow<PagingData<CatImage>>? = null) : Frag
             viewModel.images.collect {
                 recyclerAdapter.submitData(it)
             }
+        }
+
+        binding.progressBar.visibility =
+            if (recyclerAdapter.itemCount == 0) View.VISIBLE else View.GONE
+
+        recyclerAdapter.addOnPagesUpdatedListener {
+            binding.progressBar.visibility =
+                if (recyclerAdapter.itemCount == 0) View.VISIBLE else View.GONE
         }
     }
 

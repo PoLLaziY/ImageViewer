@@ -2,6 +2,7 @@ package com.example.imageviewer.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.OnBackPressedDispatcher
 import androidx.annotation.IdRes
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController

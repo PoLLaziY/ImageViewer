@@ -24,7 +24,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="64dp"
+        app:cardElevation="@dimen/main_activity_bottom_bar_card_elevation"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

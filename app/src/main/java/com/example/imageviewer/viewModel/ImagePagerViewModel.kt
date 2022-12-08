@@ -7,19 +7,28 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.view.CatImagePagingSource
-import com.example.imageviewer.web.WebService
+import com.example.imageviewer.source.ImageRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
-class ImagePagerViewModel(
-    private val webService: WebService,
-    images: StateFlow<PagingData<CatImage>>? = null
-): ViewModel() {
+open class ImagePagerViewModel(
+    private val repository: ImageRepository
+) : ViewModel() {
 
-    val images: StateFlow<PagingData<CatImage>> = images ?: Pager(PagingConfig(pageSize = 20)) {
-        CatImagePagingSource(webService, null)
-    }.flow.cachedIn(viewModelScope).stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+    val images: StateFlow<PagingData<CatImage>> =
+        Pager(PagingConfig(pageSize = 20)) {
+            repository.newImagesSourceFactory!!
+        }.flow.cachedIn(viewModelScope)
+            .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
+    val favoriteButtonListener: (image: CatImage) -> Unit = {
+        it.isFavorite = !it.isFavorite
+        repository.update(it)
+    }
+
+    val likeButtonListener: (image: CatImage) -> Unit = {
+        it.liked = !it.liked
+        repository.update(it)
+    }
 }

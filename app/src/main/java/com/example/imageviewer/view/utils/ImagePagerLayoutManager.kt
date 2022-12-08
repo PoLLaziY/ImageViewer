@@ -1,4 +1,4 @@
-package com.example.imageviewer.view
+package com.example.imageviewer.view.utils
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager

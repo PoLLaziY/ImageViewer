@@ -1,20 +1,18 @@
 package com.example.imageviewer.view.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.App
 import com.example.imageviewer.databinding.FragmentSearchImageBinding
-import com.example.imageviewer.view.ImagePagerAdapter
-import com.example.imageviewer.view.ImagePagerLayoutManager
-import com.example.imageviewer.view.ImageGridAdapter
-import com.example.imageviewer.view.ImageGridDecorator
-import com.example.imageviewer.viewModel.SearchFragmentViewModel
-import com.example.imageviewer.web.WebServiceImpl
+import com.example.imageviewer.view.utils.ImageGridAdapter
+import com.example.imageviewer.view.utils.ImageGridDecorator
+import com.example.imageviewer.view.utils.ImagePagerAdapter
+import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import kotlinx.coroutines.launch
 
 class SearchFragment() : Fragment() {
@@ -23,16 +21,19 @@ class SearchFragment() : Fragment() {
         FragmentSearchImageBinding.inflate(layoutInflater)
     }
 
-    private val viewModel by lazy {
-        SearchFragmentViewModel(WebServiceImpl())
-    }
+    private val viewModel = App.appComponent.searchViewModel
 
     private val gridRecyclerAdapter by lazy {
         ImageGridAdapter(openImage())
     }
 
     private val openedRecyclerAdapter by lazy {
-        ImagePagerAdapter(binding.openedRecycler, closeImage())
+        ImagePagerAdapter(
+            binding.openedRecycler,
+            upButtonListener = closeImage(),
+            favoriteButtonListener = viewModel.favoriteButtonListener,
+            likeButtonListener = viewModel.likeButtonListener
+        )
     }
 
     private val openedRecyclerLayoutManager by lazy {
@@ -48,8 +49,7 @@ class SearchFragment() : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                Log.i("SearchFragment", "View get = $newText")
-                viewModel.search(newText)
+                viewModel.query = newText
                 return true
             }
         })
@@ -68,6 +68,14 @@ class SearchFragment() : Fragment() {
             viewModel.images.collect {
                 gridRecyclerAdapter.submitData(it)
             }
+        }
+
+        binding.progressBar.visibility =
+            if (gridRecyclerAdapter.itemCount == 0) View.VISIBLE else View.GONE
+
+        gridRecyclerAdapter.addOnPagesUpdatedListener {
+            binding.progressBar.visibility =
+                if (gridRecyclerAdapter.itemCount == 0) View.VISIBLE else View.GONE
         }
     }
 

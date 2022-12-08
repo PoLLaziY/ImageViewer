@@ -1,21 +1,14 @@
-package com.example.imageviewer.view
+package com.example.imageviewer.source
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.web.ApiConst
-import com.example.imageviewer.web.WebService
+import com.example.imageviewer.source.web.ApiConst
 
 class CatImagePagingSource(
-    private val service: WebService,
-    private val breedId: String? = null,
-    private val categoryId: Int? = null
+    private vararg val sources: ImageSource,
+    private val query: String? = null
 ) : PagingSource<Int, CatImage>() {
-
-    init {
-        Log.i("SearchFragment", "ImagePager create with $breedId, $categoryId")
-    }
 
     override fun getRefreshKey(state: PagingState<Int, CatImage>): Int? {
         val anchorPosition = state.anchorPosition ?: return null
@@ -24,14 +17,13 @@ class CatImagePagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatImage> {
-        Log.i("SearchFragment", "ImagePager load")
         val page = params.key ?: ApiConst.FIRST_PAGE_INDEX
         val onPage =
             if (params.loadSize < ApiConst.PAGE_MAX_SIZE) params.loadSize
             else ApiConst.PAGE_MAX_SIZE
-        val list = service.searchPublicImages(page, onPage, categoryId, breedId)
+        val list = sources.map { it.searchImages(page, onPage, query) }
+            .firstOrNull { it != null }
             ?: return LoadResult.Error(Exception("WebService getNewPublicImages($page, $onPage) Error"))
-        Log.i("SearchFragment", "ImagePager loaded $list")
         val nextKey = if (list.size < onPage) null else page + 1
         val prevKey = if (page <= ApiConst.FIRST_PAGE_INDEX) null else page - 1
         return LoadResult.Page(list, prevKey, nextKey)
