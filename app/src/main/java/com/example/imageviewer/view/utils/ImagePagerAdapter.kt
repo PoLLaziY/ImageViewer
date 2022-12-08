@@ -13,12 +13,22 @@ import com.example.imageviewer.databinding.OpenedImageBinding
 import com.example.imageviewer.domain.CatImage
 
 class ImagePagerAdapter(
-    private val recycler: RecyclerView,
     private inline val upButtonListener: (() -> Unit)? = null,
     private inline val downButtonListener: (() -> Unit)? = null,
-    private inline val favoriteButtonListener: ((image: CatImage) -> Unit)? = null,
-    private inline val likeButtonListener: ((image: CatImage) -> Unit)? = null
+    private inline val favoriteButtonListener: ((image: CatImage, position: Int) -> Unit)? = null,
+    private inline val likeButtonListener: ((image: CatImage, position: Int) -> Unit)? = null,
+    private inline val onImageWatched: ((image: CatImage, position: Int) -> Unit)? = null,
 ) : PagingDataAdapter<CatImage, ImagePagerAdapter.ImageHolder>(ImageDiffItemCallback) {
+
+    private var recycler: RecyclerView? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        recycler = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        recycler = null
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -34,13 +44,13 @@ class ImagePagerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         private var buttonFaded = true
-        private var image: CatImage? = null
+        var image: CatImage? = null
 
         init {
-
             if (upButtonListener == null) binding.upButton.visibility = View.GONE
             else binding.upButton.setOnClickListener {
                 upButtonListener.invoke()
+                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
             }
 
             if (downButtonListener == null) binding.downButton.visibility = View.GONE
@@ -50,22 +60,24 @@ class ImagePagerAdapter(
 
             binding.nextButton.setOnClickListener {
                 if (absoluteAdapterPosition >= itemCount - 1) return@setOnClickListener
-                recycler.smoothScrollToPosition(absoluteAdapterPosition + 1)
+                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                recycler?.smoothScrollToPosition(absoluteAdapterPosition + 1)
             }
             binding.previousButton.setOnClickListener {
                 if (absoluteAdapterPosition <= 0) return@setOnClickListener
-                recycler.smoothScrollToPosition(absoluteAdapterPosition - 1)
+                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                recycler?.smoothScrollToPosition(absoluteAdapterPosition - 1)
             }
             binding.fadeButton.setOnClickListener {
                 onFadeButtonClick(500L)
             }
             binding.favoriteButton.setOnClickListener {
                 if (image == null) return@setOnClickListener
-                favoriteButtonListener?.invoke(image!!)
+                favoriteButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
             binding.likeButton.setOnClickListener {
                 if (image == null) return@setOnClickListener
-                likeButtonListener?.invoke(image!!)
+                likeButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
         }
 
@@ -97,7 +109,8 @@ object ImageDiffItemCallback : DiffUtil.ItemCallback<CatImage>() {
     override fun areItemsTheSame(oldItem: CatImage, newItem: CatImage) = oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: CatImage, newItem: CatImage) =
-        oldItem.url == newItem.url
+        oldItem.url == newItem.url && oldItem.liked == newItem.liked
+                && oldItem.watched == newItem.watched && oldItem.favorite == newItem.favorite
 }
 
 val Int.px: Float

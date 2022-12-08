@@ -4,28 +4,35 @@ import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class ImagePagerLayoutManager(context: Context): LinearLayoutManager(context) {
+class ImagePagerLayoutManager(context: Context) :
+    LinearLayoutManager(context) {
 
-    private var scrollListenerAdded = false
     private var scrollToNext = true
-
-    init {
-        orientation = HORIZONTAL
-    }
 
     private val scrollListener by lazy {
         object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == 1 && recyclerView.layoutManager is LinearLayoutManager) {
                     val position = if (scrollToNext) {
-                        (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                        findLastVisibleItemPosition()
                     } else {
-                        (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                        findFirstVisibleItemPosition()
                     }
                     recyclerView.scrollToPosition(position)
                 }
             }
         }
+    }
+
+    override fun onAttachedToWindow(recyclerView: RecyclerView?) {
+        orientation = HORIZONTAL
+        super.onAttachedToWindow(recyclerView)
+        recyclerView?.addOnScrollListener(scrollListener)
+    }
+
+    override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler?) {
+        super.onDetachedFromWindow(view, recycler)
+        view?.removeOnScrollListener(scrollListener)
     }
 
     override fun canScrollHorizontally(): Boolean {
@@ -37,10 +44,6 @@ class ImagePagerLayoutManager(context: Context): LinearLayoutManager(context) {
         state: RecyclerView.State?,
         position: Int
     ) {
-        if (!scrollListenerAdded && recyclerView != null) {
-            recyclerView.addOnScrollListener(scrollListener)
-            scrollListenerAdded = true
-        }
         scrollToNext = findFirstVisibleItemPosition() <= position
         super.smoothScrollToPosition(recyclerView, state, position)
     }

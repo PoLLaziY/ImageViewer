@@ -20,85 +20,65 @@ import kotlin.coroutines.suspendCoroutine
 class ImageRepository(
     private val webService: WebService,
     private val dbService: DbService
-) {
+) : ImageStateUpdater {
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     init {
-        webService.onImagesLoaded = {
+        webService.loadedImages.observeForever {
             scope.launch {
                 dbService.insert(it)
             }
         }
-
         dbService.dbUpdate.observeForever {
             favoriteImagesFactory?.invalidate()
         }
     }
 
-    val allCategories: StateFlow<List<Category>?> =
-        MutableStateFlow<List<Category>?>(null).also { state ->
-            scope.launch {
-                state.emit(webService.getAllCategories() ?: emptyList())
-            }
-        }
-
-    val allBreeds: StateFlow<List<Breed>?> = MutableStateFlow<List<Breed>?>(null).also { state ->
+    private val allCategories: StateFlow<List<Category>?> by lazy {
+        val flow = MutableStateFlow<List<Category>?>(null)
         scope.launch {
-            state.emit(webService.getAllBreeds() ?: emptyList())
+            flow.emit(webService.getAllCategories() ?: emptyList())
         }
+        return@lazy flow
     }
 
-    var queryForSearch: String? = null
-        set(value) {
-            if (field == value) return
-            field = value
-            foundImagesSourceFactory?.invalidate()
-        }
-
-    fun update(image: CatImage) {
+    private val allBreeds: StateFlow<List<Breed>?> by lazy {
+        val flow = MutableStateFlow<List<Breed>?>(null)
         scope.launch {
-            dbService.update(image)
+            flow.emit(webService.getAllBreeds() ?: emptyList())
         }
+        return@lazy flow
     }
 
-    var favoriteImagesFactory: CatImagePagingSource? = null
-        get() {
-            if (field == null || field?.invalid != false) {
-                field = CatImagePagingSource(
-                    dbService.favoriteImageSource,
-                    query = null
-                )
-                return field
-            }
-            return field
-        }
+    private var foundImagesSourceFactory: CatImagePagingSource? = null
+    fun foundImagesSourceFactory(query: String?): CatImagePagingSource {
+        foundImagesSourceFactory = CatImagePagingSource(
+            webService.imageSource(searchAlgorithm),
+            query = query
+        )
+        return foundImagesSourceFactory!!
+    }
 
-    var newImagesSourceFactory: CatImagePagingSource? = null
-        get() {
-            if (field == null || field?.invalid != false) {
-                field = CatImagePagingSource(
-                    webService.imageSource(searchAlgorithm),
-                    dbService.allImageSource,
-                    query = null
-                )
-                return field
-            }
-            return field
-        }
+    private var favoriteImagesFactory: CatImagePagingSource? = null
+    fun favoriteImagesFactory(
+        favorite: Boolean = false,
+        liked: Boolean = false,
+        watched: Boolean = false
+    ): CatImagePagingSource {
+        favoriteImagesFactory = CatImagePagingSource(
+            dbService.imageSource(favorite, liked, watched)
+        )
+        return favoriteImagesFactory!!
+    }
 
-    var foundImagesSourceFactory: CatImagePagingSource? = null
-        get() {
-            if (field == null || field?.invalid != false) {
-                field = CatImagePagingSource(
-                    webService.imageSource(searchAlgorithm),
-                    dbService.allImageSource,
-                    query = queryForSearch
-                )
-                return field
-            }
-            return field
-        }
-
+    private var newImagesSourceFactory: CatImagePagingSource? = null
+    fun newImagesSourceFactory(onLoadNull: (() -> Unit)? = null): CatImagePagingSource  {
+        newImagesSourceFactory = CatImagePagingSource(
+            webService.imageSource(searchAlgorithm),
+            onSourceReturnNull = onLoadNull
+        )
+        return newImagesSourceFactory!!
+    }
 
     private suspend fun waitInitParams(): Job =
         suspendCoroutine { coroutine ->
@@ -124,4 +104,10 @@ class ImageRepository(
         }
 
     private val searchAlgorithm: SearchAlgorithm = SearchAlgorithmImpl(allBreeds, allCategories)
+
+    override fun update(catImage: CatImage) {
+        scope.launch {
+            dbService.update(catImage)
+        }
+    }
 }

@@ -1,15 +1,19 @@
 package com.example.imageviewer.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.example.App
 import com.example.imageviewer.databinding.FragmentFavoriteBinding
 import com.example.imageviewer.view.utils.ImageGridAdapter
 import com.example.imageviewer.view.utils.ImageGridDecorator
+import com.example.imageviewer.view.utils.ImagePagerAdapter
+import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment() {
@@ -23,7 +27,24 @@ class FavoriteFragment : Fragment() {
     }
 
     private val gridAdapter by lazy {
-        ImageGridAdapter()
+        ImageGridAdapter(openImage = openImage())
+    }
+
+    private val openedRecyclerAdapter by lazy {
+        ImagePagerAdapter(upButtonListener = closeImage(),
+            favoriteButtonListener = { image, _ ->
+                viewModel.updateFavorite(image)
+            },
+            likeButtonListener = { image, _ ->
+                viewModel.updateLiked(image)
+            },
+            onImageWatched = { image, _ ->
+                viewModel.updateWatched(image)
+            })
+    }
+
+    private val openedRecyclerLayoutManager by lazy {
+        ImagePagerLayoutManager(requireContext())
     }
 
     private val itemDecorator by lazy {
@@ -33,12 +54,32 @@ class FavoriteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.recycler.adapter = gridAdapter
-        binding.recycler.addItemDecoration(itemDecorator)
+        binding.gridRecycler.adapter = gridAdapter
+        binding.gridRecycler.addItemDecoration(itemDecorator)
+
+        binding.openedRecycler.adapter = openedRecyclerAdapter
+        binding.openedRecycler.layoutManager = openedRecyclerLayoutManager
+        binding.openedRecycler.visibility = View.GONE
+
+        updateCheckState()
+
+        binding.chipGroup.setOnCheckedStateChangeListener { _, _ ->
+            updateCheckState()
+        }
+
+        gridAdapter.addOnPagesUpdatedListener {
+            gridAdapter.notifyDataSetChanged()
+        }
 
         lifecycleScope.launch {
             viewModel.images.collect {
                 gridAdapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.images.collect {
+                openedRecyclerAdapter.submitData(it)
             }
         }
     }
@@ -48,5 +89,20 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return binding.root
+    }
+
+    private fun openImage(): (Int) -> Unit = {
+        binding.openedRecycler.scrollToPosition(it)
+        binding.openedRecycler.visibility = View.VISIBLE
+    }
+
+    private fun closeImage(): () -> Unit = {
+        binding.openedRecycler.visibility = View.GONE
+    }
+
+    private fun updateCheckState() {
+        viewModel.needFavorite = binding.favoriteChip.isChecked
+        viewModel.needLiked = binding.likedChip.isChecked
+        viewModel.needWatched = binding.watchedChip.isChecked
     }
 }

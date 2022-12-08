@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.App
@@ -29,10 +29,19 @@ class SearchFragment() : Fragment() {
 
     private val openedRecyclerAdapter by lazy {
         ImagePagerAdapter(
-            binding.openedRecycler,
             upButtonListener = closeImage(),
-            favoriteButtonListener = viewModel.favoriteButtonListener,
-            likeButtonListener = viewModel.likeButtonListener
+            favoriteButtonListener = { image, pos ->
+                viewModel.updateFavorite(image)
+                gridRecyclerAdapter.notifyItemChanged(pos)
+            },
+            likeButtonListener = { image, pos ->
+                viewModel.updateLiked(image)
+                gridRecyclerAdapter.notifyItemChanged(pos)
+            },
+            onImageWatched = { image, pos ->
+                viewModel.updateWatched(image)
+                gridRecyclerAdapter.notifyItemChanged(pos)
+            }
         )
     }
 
