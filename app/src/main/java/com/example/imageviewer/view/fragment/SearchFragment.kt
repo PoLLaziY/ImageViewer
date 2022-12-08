@@ -30,9 +30,18 @@ class SearchFragment() : Fragment() {
     private val openedRecyclerAdapter by lazy {
         ImagePagerAdapter(
             upButtonListener = closeImage(),
-            favoriteButtonListener = viewModel.favoriteButtonListener,
-            likeButtonListener = viewModel.likeButtonListener,
-            onImageWatched = viewModel.onImageWatched
+            favoriteButtonListener = { image, pos ->
+                viewModel.updateFavorite(image)
+                gridRecyclerAdapter.notifyItemChanged(pos)
+            },
+            likeButtonListener = { image, pos ->
+                viewModel.updateLiked(image)
+                gridRecyclerAdapter.notifyItemChanged(pos)
+            },
+            onImageWatched = { image, pos ->
+                viewModel.updateWatched(image)
+                gridRecyclerAdapter.notifyItemChanged(pos)
+            }
         )
     }
 

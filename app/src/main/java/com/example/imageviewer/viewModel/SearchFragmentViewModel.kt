@@ -7,7 +7,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.source.CatImagePagingSource
 import com.example.imageviewer.source.ImageRepository
+import com.example.imageviewer.source.ImageStateUpdater
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -15,34 +17,26 @@ import java.util.*
 
 class SearchFragmentViewModel(
     private val repository: ImageRepository
-) : ViewModel() {
+) : ViewModel(), ImageStateUpdater by repository {
 
-    var query: String?
-        set(value) {
-            repository.queryForSearch = value
+    private var imageSource: CatImagePagingSource = CatImagePagingSource()
+        get() {
+            if (field.invalid) {
+                field = repository.foundImagesSourceFactory(query)
+            }
+            return field
         }
-        get() = repository.queryForSearch
 
     val images: StateFlow<PagingData<CatImage>> =
         Pager(PagingConfig(pageSize = 20)) {
-            repository.foundImagesSourceFactory!!
+            imageSource
         }.flow.cachedIn(viewModelScope)
             .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
-    val favoriteButtonListener: (image: CatImage) -> Unit = {
-        it.favorite = if (it.favorite > 0) 0 else Date().time
-        repository.update(it)
-    }
-
-    val likeButtonListener: (image: CatImage) -> Unit = {
-        it.liked = if (it.liked > 0) 0 else Date().time
-        repository.update(it)
-    }
-
-    val onImageWatched: (image: CatImage?) -> Unit = {
-        if (it != null) {
-            it.watched = Date().time
-            repository.update(it)
+    var query: String? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            imageSource.invalidate()
         }
-    }
 }

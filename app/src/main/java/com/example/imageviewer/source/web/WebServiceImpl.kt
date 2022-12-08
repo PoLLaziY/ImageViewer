@@ -1,5 +1,7 @@
 package com.example.imageviewer.source.web
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.imageviewer.BuildConfig
 import com.example.imageviewer.domain.Breed
 import com.example.imageviewer.domain.CatImage
@@ -12,19 +14,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 interface WebService {
-    suspend fun getNewPublicImages(page: Int, onPage: Int): List<CatImage>?
-    suspend fun searchPublicImages(
-        page: Int,
-        onPage: Int,
-        categoryIds: Int?,
-        breedId: String?
-    ): List<CatImage>?
-
     suspend fun getImage(id: String): CatImage?
     suspend fun getAllBreeds(): List<Breed>?
     suspend fun getAllCategories(): List<Category>?
     fun imageSource(searchAlgorithm: SearchAlgorithm? = null): ImageSource
-    var onImagesLoaded: ((List<CatImage>) -> Unit)?
+    val loadedImages: LiveData<List<CatImage>>
 }
 
 class WebServiceImpl() : WebService {
@@ -52,16 +46,7 @@ class WebServiceImpl() : WebService {
         retrofit.create(CatImageRetrofitService::class.java)
     }
 
-    override var onImagesLoaded: ((List<CatImage>) -> Unit)? = null
-
-    override suspend fun getNewPublicImages(page: Int, onPage: Int): List<CatImage>? {
-        return try {
-            service.getAllPublicImages(apiKey = ApiConst.KEY, page = page, onPage = onPage)
-                .body()
-        } catch (e: Exception) {
-            null
-        }
-    }
+    override val loadedImages = MutableLiveData<List<CatImage>>()
 
     override suspend fun getImage(id: String): CatImage? {
         return try {
@@ -94,7 +79,7 @@ class WebServiceImpl() : WebService {
 
     override fun imageSource(searchAlgorithm: SearchAlgorithm?): ImageSource {
         return object : ImageSource {
-            override suspend fun searchImages(
+            override suspend fun getImages(
                 page: Int,
                 onPage: Int,
                 query: String?
@@ -112,7 +97,7 @@ class WebServiceImpl() : WebService {
         }
     }
 
-    override suspend fun searchPublicImages(
+    suspend fun searchPublicImages(
         page: Int,
         onPage: Int,
         categoryIds: Int?,
@@ -148,7 +133,7 @@ class WebServiceImpl() : WebService {
         } catch (e: Exception) {
             null
         }
-        if (result != null) onImagesLoaded?.invoke(result)
+        if (result != null) loadedImages.postValue(result!!)
         return result
     }
 

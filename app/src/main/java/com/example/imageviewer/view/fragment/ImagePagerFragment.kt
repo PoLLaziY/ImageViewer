@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.App
 import com.example.imageviewer.databinding.FragmentImagePagerBinding
+import com.example.imageviewer.source.ImageStateUpdater
 import com.example.imageviewer.view.utils.ImagePagerAdapter
 import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import com.example.imageviewer.viewModel.ImagePagerViewModel
@@ -23,9 +24,15 @@ class ImagePagerFragment() : Fragment() {
 
     private val recyclerAdapter: ImagePagerAdapter by lazy {
         ImagePagerAdapter(
-            favoriteButtonListener = viewModel.favoriteButtonListener,
-            likeButtonListener = viewModel.likeButtonListener,
-            onImageWatched = viewModel.onImageWatched
+            favoriteButtonListener = { image, _ ->
+                viewModel.updateFavorite(image)
+            },
+            likeButtonListener = { image, _ ->
+                viewModel.updateLiked(image)
+            },
+            onImageWatched = { image, _ ->
+                viewModel.updateWatched(image)
+            }
         )
     }
 

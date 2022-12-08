@@ -1,11 +1,13 @@
 package com.example.imageviewer.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.example.App
 import com.example.imageviewer.databinding.FragmentFavoriteBinding
 import com.example.imageviewer.view.utils.ImageGridAdapter
@@ -29,7 +31,16 @@ class FavoriteFragment : Fragment() {
     }
 
     private val openedRecyclerAdapter by lazy {
-        ImagePagerAdapter(upButtonListener = closeImage())
+        ImagePagerAdapter(upButtonListener = closeImage(),
+            favoriteButtonListener = { image, _ ->
+                viewModel.updateFavorite(image)
+            },
+            likeButtonListener = { image, _ ->
+                viewModel.updateLiked(image)
+            },
+            onImageWatched = { image, _ ->
+                viewModel.updateWatched(image)
+            })
     }
 
     private val openedRecyclerLayoutManager by lazy {
@@ -49,6 +60,16 @@ class FavoriteFragment : Fragment() {
         binding.openedRecycler.adapter = openedRecyclerAdapter
         binding.openedRecycler.layoutManager = openedRecyclerLayoutManager
         binding.openedRecycler.visibility = View.GONE
+
+        updateCheckState()
+
+        binding.chipGroup.setOnCheckedStateChangeListener { _, _ ->
+            updateCheckState()
+        }
+
+        gridAdapter.addOnPagesUpdatedListener {
+            gridAdapter.notifyDataSetChanged()
+        }
 
         lifecycleScope.launch {
             viewModel.images.collect {
@@ -77,5 +98,11 @@ class FavoriteFragment : Fragment() {
 
     private fun closeImage(): () -> Unit = {
         binding.openedRecycler.visibility = View.GONE
+    }
+
+    private fun updateCheckState() {
+        viewModel.needFavorite = binding.favoriteChip.isChecked
+        viewModel.needLiked = binding.likedChip.isChecked
+        viewModel.needWatched = binding.watchedChip.isChecked
     }
 }

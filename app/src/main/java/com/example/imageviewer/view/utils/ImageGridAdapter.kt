@@ -1,7 +1,9 @@
 package com.example.imageviewer.view.utils
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -26,12 +28,16 @@ class ImageGridAdapter(private inline val openImage: ((position: Int) -> Unit)? 
         return holder
     }
 
+
     inner class ImageHolder(val binding: ImageRecyclerItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(image: CatImage?) {
             Glide.with(binding.root)
                 .load(Uri.parse(image?.url))
                 .into(binding.image)
+            binding.watchedImage.visibility = if (image?.watched?:0 > 0) View.VISIBLE else View.GONE
+            binding.likedImage.visibility = if (image?.liked?:0 > 0) View.VISIBLE else View.GONE
+            binding.favoriteImage.visibility = if (image?.favorite?:0 > 0) View.VISIBLE else View.GONE
         }
     }
 }

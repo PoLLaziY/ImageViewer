@@ -13,8 +13,8 @@
         android:icon="@drawable/ic_baseline_search_24"/>
 
     <item android:id="@+id/favorite"
-        android:title="Favorite"
+        android:title="Wathed"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_baseline_favorite_24"/>
+        android:icon="@drawable/ic_baseline_remove_red_eye_24"/>
 
 </menu>
