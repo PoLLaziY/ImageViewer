@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".view.fragment.SearchFragment">
 
-    <androidx.cardview.widget.CardView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black_background"
-        android:translationZ="@dimen/search_fragment_search_view_elevation">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".view.fragment.SearchFragment">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/search_fragment_search_view_margin"
-            android:searchIcon="@drawable/ic_baseline_search_24" />
+            android:background="@color/black_background"
+            android:translationZ="@dimen/search_fragment_search_view_elevation">
 
-    </androidx.cardview.widget.CardView>
-
-    <FrameLayout
-        android:id="@+id/recyclerRoot"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/search_fragment_search_view_margin"
+                android:searchIcon="@drawable/ic_baseline_search_24"
+                app:layout_scrollFlags="scroll|snap"/>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gridRecycler"
@@ -33,15 +33,8 @@
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
-            tools:listitem="@layout/image_recycler_item" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/openedRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:listitem="@layout/opened_image" />
+            tools:listitem="@layout/image_recycler_item"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -49,6 +42,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
-    </FrameLayout>
 
-</LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/openedRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:listitem="@layout/image_holder" />
+
+</FrameLayout>

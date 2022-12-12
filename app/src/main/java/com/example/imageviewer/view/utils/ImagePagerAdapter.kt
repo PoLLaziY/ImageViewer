@@ -47,35 +47,35 @@ class ImagePagerAdapter(
         var image: CatImage? = null
 
         init {
-            if (upButtonListener == null) binding.upButton.visibility = View.GONE
-            else binding.upButton.setOnClickListener {
+            if (upButtonListener == null) binding.image.upButton.visibility = View.GONE
+            else binding.image.upButton.setOnClickListener {
                 upButtonListener.invoke()
                 onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
             }
 
-            if (downButtonListener == null) binding.downButton.visibility = View.GONE
-            else binding.downButton.setOnClickListener {
+            if (downButtonListener == null) binding.image.downButton.visibility = View.GONE
+            else binding.image.downButton.setOnClickListener {
                 downButtonListener.invoke()
             }
 
-            binding.nextButton.setOnClickListener {
+            binding.image.nextButton.setOnClickListener {
                 if (absoluteAdapterPosition >= itemCount - 1) return@setOnClickListener
                 onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
                 recycler?.smoothScrollToPosition(absoluteAdapterPosition + 1)
             }
-            binding.previousButton.setOnClickListener {
+            binding.image.previousButton.setOnClickListener {
                 if (absoluteAdapterPosition <= 0) return@setOnClickListener
                 onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
                 recycler?.smoothScrollToPosition(absoluteAdapterPosition - 1)
             }
-            binding.fadeButton.setOnClickListener {
+            binding.image.fadeButton.setOnClickListener {
                 onFadeButtonClick(500L)
             }
-            binding.favoriteButton.setOnClickListener {
+            binding.image.favoriteButton.setOnClickListener {
                 if (image == null) return@setOnClickListener
                 favoriteButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
-            binding.likeButton.setOnClickListener {
+            binding.image.likeButton.setOnClickListener {
                 if (image == null) return@setOnClickListener
                 likeButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
@@ -89,16 +89,16 @@ class ImagePagerAdapter(
             if (catImage == null) return
             Glide.with(binding.root)
                 .load(Uri.parse(catImage.url))
-                .into(binding.image)
+                .into(binding.image.image)
         }
 
         private fun onFadeButtonClick(animationsDuration: Long) {
             val direction = if (buttonFaded) -1 else 1
-            binding.fadeButton.animate().translationYBy((direction * 136).px)
+            binding.image.fadeButton.animate().translationYBy((direction * 136).px)
                 .rotationBy(180.0f).setDuration(animationsDuration).start()
-            binding.shareButton.animate().translationYBy((direction * 136).px)
+            binding.image.shareButton.animate().translationYBy((direction * 136).px)
                 .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
-            binding.favoriteButton.animate().translationYBy((direction * 68).px)
+            binding.image.favoriteButton.animate().translationYBy((direction * 68).px)
                 .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
             buttonFaded = !buttonFaded
         }

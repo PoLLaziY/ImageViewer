@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_scrollFlags="scroll|snap">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/opened_image_margin"
+        app:cardCornerRadius="@dimen/opened_image_card_corner_radius"
+        android:elevation="@dimen/opened_image_elevation">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black_background"
+                android:scaleType="fitCenter"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <ImageView
+                android:id="@+id/upButton"
+                android:layout_width="@dimen/opened_image_swipe_button_dimen"
+                android:layout_height="@dimen/opened_image_swipe_button_dimen"
+                android:layout_margin="@dimen/opened_image_swipe_button_margin"
+                android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageButton
+                android:id="@+id/fadeButton"
+                android:layout_width="@dimen/opened_image_button_upper_dimen"
+                android:layout_height="@dimen/opened_image_button_upper_dimen"
+                android:layout_margin="@dimen/opened_image_upper_margin"
+                android:rotation="180"
+                android:background="@drawable/round_button_background"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_baseline_arrow_drop_down_circle_24"
+                app:layout_constraintBottom_toTopOf="@+id/shareButton"
+                app:layout_constraintEnd_toEndOf="@+id/shareButton"
+                app:layout_constraintStart_toStartOf="@+id/shareButton"
+                android:stateListAnimator="@animator/button_selector" />
+
+            <ImageButton
+                android:id="@+id/shareButton"
+                android:layout_width="@dimen/opened_image_interact_button_dimen"
+                android:layout_height="@dimen/opened_image_interact_button_dimen"
+                android:alpha="0.5"
+                android:background="@drawable/round_button_background"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_baseline_share_24"
+                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:stateListAnimator="@animator/button_selector" />
+
+
+            <ImageButton
+                android:id="@+id/favoriteButton"
+                android:layout_width="@dimen/opened_image_interact_button_dimen"
+                android:layout_height="@dimen/opened_image_interact_button_dimen"
+                android:alpha="0.5"
+                android:background="@drawable/round_button_background"
+                android:scaleType="center"
+                android:src="@drawable/ic_baseline_favorite_border_24"
+                app:layout_constraintBottom_toBottomOf="@+id/likeButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:stateListAnimator="@animator/button_selector" />
+
+            <ImageButton
+                android:id="@+id/previousButton"
+                android:layout_width="@dimen/opened_image_interact_button_dimen"
+                android:layout_height="@dimen/opened_image_interact_button_dimen"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_baseline_chevron_left_24"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintEnd_toStartOf="@+id/likeButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/likeButton" />
+
+            <ImageButton
+                android:id="@+id/likeButton"
+                android:layout_width="@dimen/opened_image_interact_button_dimen"
+                android:layout_height="@dimen/opened_image_interact_button_dimen"
+                android:layout_margin="24dp"
+                android:background="@drawable/round_button_background"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_baseline_local_fire_department_24"
+                app:layout_constraintBottom_toTopOf="@+id/downButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:stateListAnimator="@animator/button_selector"/>
+
+            <ImageButton
+                android:id="@+id/nextButton"
+                android:layout_width="@dimen/opened_image_interact_button_dimen"
+                android:layout_height="@dimen/opened_image_interact_button_dimen"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_baseline_chevron_right_24"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/likeButton"
+                app:layout_constraintTop_toTopOf="@+id/likeButton">
+
+            </ImageButton>
+
+            <ImageView
+                android:id="@+id/downButton"
+                android:layout_width="@dimen/opened_image_swipe_button_dimen"
+                android:layout_height="@dimen/opened_image_swipe_button_dimen"
+                android:layout_margin="@dimen/opened_image_swipe_button_margin"
+                android:visibility="visible"
+                android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>
