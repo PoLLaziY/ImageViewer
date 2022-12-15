@@ -1,12 +1,17 @@
 package com.example.imageviewer.view.utils
 
+import android.content.ContentValues
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore.Images
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.core.view.forEachIndexed
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -16,8 +21,10 @@ import com.example.imageviewer.R
 import com.example.imageviewer.databinding.OpenedImageBinding
 import com.example.imageviewer.domain.CatImage
 import com.google.android.material.chip.Chip
+import java.io.OutputStream
 import java.text.DateFormat
 import java.util.*
+
 
 class ImagePagerAdapter(
     private inline val upButtonListener: (() -> Unit)? = null,
@@ -59,7 +66,7 @@ class ImagePagerAdapter(
             if (upButtonListener == null) binding.image.upButton.visibility = View.GONE
             else binding.image.upButton.setOnClickListener {
                 upButtonListener.invoke()
-                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                onImageWatched?.invoke(image ?: return@setOnClickListener, absoluteAdapterPosition)
             }
 
             if (downButtonListener == null) binding.image.downButton.visibility = View.GONE
@@ -69,12 +76,12 @@ class ImagePagerAdapter(
 
             binding.image.nextButton.setOnClickListener {
                 if (absoluteAdapterPosition >= itemCount - 1) return@setOnClickListener
-                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                onImageWatched?.invoke(image ?: return@setOnClickListener, absoluteAdapterPosition)
                 recycler?.smoothScrollToPosition(absoluteAdapterPosition + 1)
             }
             binding.image.previousButton.setOnClickListener {
                 if (absoluteAdapterPosition <= 0) return@setOnClickListener
-                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                onImageWatched?.invoke(image ?: return@setOnClickListener, absoluteAdapterPosition)
                 recycler?.smoothScrollToPosition(absoluteAdapterPosition - 1)
             }
             binding.image.fadeButton.setOnClickListener {
@@ -88,14 +95,66 @@ class ImagePagerAdapter(
                 if (image == null) return@setOnClickListener
                 likeButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
-
             binding.image.shareButton.setOnClickListener {
-                val intent = Intent()
-                intent.action = Intent.ACTION_SEND
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_STREAM, "MyText")
-                binding.root.context.startActivity(intent)
+                shareImage()
             }
+            binding.image.loadButton.setOnClickListener {
+                loadImage()
+            }
+        }
+
+        private fun loadImage() {
+            val context = binding.root.context
+            val resolver = context.contentResolver
+            val icon = binding.image.image.drawable.toBitmapOrNull() ?: return
+
+            Glide.with(context)
+                .load(icon)
+                .into(binding.image.image)
+
+            val share = Intent(Intent.ACTION_SEND)
+            share.type = "image/jpeg"
+
+            val values = ContentValues()
+            values.put(Images.Media.TITLE, "title")
+            values.put(Images.Media.MIME_TYPE, "image/jpeg")
+            val uri: Uri = resolver.insert(
+                Images.Media.EXTERNAL_CONTENT_URI,
+                values
+            ) ?: return
+
+            val stream: OutputStream = resolver.openOutputStream(uri) ?: return
+            icon.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+        }
+
+        private fun shareImage() {
+            val context = binding.root.context
+            val resolver = context.contentResolver
+            val icon = binding.image.image.drawable.toBitmapOrNull() ?: return
+
+            Glide.with(context)
+                .load(icon)
+                .into(binding.image.image)
+
+            val share = Intent(Intent.ACTION_SEND)
+            share.type = "image/jpeg"
+
+            val values = ContentValues()
+            values.put(Images.Media.TITLE, "title")
+            values.put(Images.Media.MIME_TYPE, "image/jpeg")
+            val uri: Uri = resolver.insert(
+                Images.Media.EXTERNAL_CONTENT_URI,
+                values
+            ) ?: return
+
+            val stream: OutputStream = resolver.openOutputStream(uri) ?: return
+            icon.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+
+            share.putExtra(Intent.EXTRA_STREAM, uri)
+            context.startActivity(Intent.createChooser(share, "Share Image"))
         }
 
         fun onBind(catImage: CatImage?) {
@@ -107,12 +166,12 @@ class ImagePagerAdapter(
             Glide.with(binding.root)
                 .load(Uri.parse(catImage.url))
                 .into(binding.image.image)
+
+
+
             binding.details.tags.chipGroup.forEachIndexed { index, view ->
                 if (view is Chip) {
-                    Log.i("ChipGroup", "$catImage")
                     val name = catImage.categories.getOrNull(index)?.name
-
-                    Log.i("ChipGroup", "$name $index")
                     if (name.isNullOrEmpty()) view.visibility = View.GONE
                     else {
                         view.text = name
@@ -124,14 +183,17 @@ class ImagePagerAdapter(
             val liked = formatter.format(Date(catImage.liked))
             val watched = formatter.format(Date(catImage.watched))
             binding.details.liked.text = binding.root.resources.getString(R.string.liked, liked)
-            binding.details.watched.text = binding.root.resources.getString(R.string.watched, watched)
+            binding.details.watched.text =
+                binding.root.resources.getString(R.string.watched, watched)
             adapter.list = catImage.breeds
         }
 
         private fun onFadeButtonClick(animationsDuration: Long) {
             val direction = if (buttonFaded) -1 else 1
-            binding.image.fadeButton.animate().translationYBy((direction * 136).px)
+            binding.image.fadeButton.animate().translationYBy((direction * 204).px)
                 .rotationBy(180.0f).setDuration(animationsDuration).start()
+            binding.image.loadButton.animate().translationYBy((direction * 204).px)
+                .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
             binding.image.shareButton.animate().translationYBy((direction * 136).px)
                 .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
             binding.image.favoriteButton.animate().translationYBy((direction * 68).px)

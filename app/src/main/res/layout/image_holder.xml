@@ -52,6 +52,19 @@
                 android:stateListAnimator="@animator/button_selector" />
 
             <ImageButton
+                android:id="@+id/loadButton"
+                android:layout_width="@dimen/opened_image_interact_button_dimen"
+                android:layout_height="@dimen/opened_image_interact_button_dimen"
+                android:alpha="0.5"
+                android:background="@drawable/round_button_background"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_baseline_download_24"
+                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:stateListAnimator="@animator/button_selector" />
+
+            <ImageButton
                 android:id="@+id/shareButton"
                 android:layout_width="@dimen/opened_image_interact_button_dimen"
                 android:layout_height="@dimen/opened_image_interact_button_dimen"
