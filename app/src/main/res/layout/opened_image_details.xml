@@ -21,6 +21,23 @@
             <include layout="@layout/opened_image_tags"
                 android:id="@+id/tags"/>
 
+            <TextView
+                android:id="@+id/watched"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/grid_item_margin"
+                android:layout_marginTop="@dimen/grid_item_margin"
+                android:text="@string/watched"/>
+
+
+            <TextView
+                android:id="@+id/liked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/grid_item_margin"
+                android:layout_marginBottom="12dp"
+                android:text="@string/liked"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"

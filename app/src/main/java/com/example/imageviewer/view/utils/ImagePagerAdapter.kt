@@ -1,16 +1,23 @@
 package com.example.imageviewer.view.utils
 
+import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.forEachIndexed
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.imageviewer.R
 import com.example.imageviewer.databinding.OpenedImageBinding
 import com.example.imageviewer.domain.CatImage
+import com.google.android.material.chip.Chip
+import java.text.DateFormat
+import java.util.*
 
 class ImagePagerAdapter(
     private inline val upButtonListener: (() -> Unit)? = null,
@@ -45,8 +52,10 @@ class ImagePagerAdapter(
 
         private var buttonFaded = true
         var image: CatImage? = null
+        private val adapter = BreedListAdapter()
 
         init {
+            binding.details.recycler.adapter = adapter
             if (upButtonListener == null) binding.image.upButton.visibility = View.GONE
             else binding.image.upButton.setOnClickListener {
                 upButtonListener.invoke()
@@ -79,6 +88,14 @@ class ImagePagerAdapter(
                 if (image == null) return@setOnClickListener
                 likeButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
+
+            binding.image.shareButton.setOnClickListener {
+                val intent = Intent()
+                intent.action = Intent.ACTION_SEND
+                intent.type = "image/*"
+                intent.putExtra(Intent.EXTRA_STREAM, "MyText")
+                binding.root.context.startActivity(intent)
+            }
         }
 
         fun onBind(catImage: CatImage?) {
@@ -90,6 +107,25 @@ class ImagePagerAdapter(
             Glide.with(binding.root)
                 .load(Uri.parse(catImage.url))
                 .into(binding.image.image)
+            binding.details.tags.chipGroup.forEachIndexed { index, view ->
+                if (view is Chip) {
+                    Log.i("ChipGroup", "$catImage")
+                    val name = catImage.categories.getOrNull(index)?.name
+
+                    Log.i("ChipGroup", "$name $index")
+                    if (name.isNullOrEmpty()) view.visibility = View.GONE
+                    else {
+                        view.text = name
+                        view.visibility = View.VISIBLE
+                    }
+                }
+            }
+            val formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+            val liked = formatter.format(Date(catImage.liked))
+            val watched = formatter.format(Date(catImage.watched))
+            binding.details.liked.text = binding.root.resources.getString(R.string.liked, liked)
+            binding.details.watched.text = binding.root.resources.getString(R.string.watched, watched)
+            adapter.list = catImage.breeds
         }
 
         private fun onFadeButtonClick(animationsDuration: Long) {
