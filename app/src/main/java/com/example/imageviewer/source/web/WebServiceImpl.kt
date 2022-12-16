@@ -21,7 +21,7 @@ interface WebService {
     val loadedImages: LiveData<List<CatImage>>
 }
 
-class WebServiceImpl() : WebService {
+class WebServiceImpl : WebService {
 
     private val interceptor by lazy {
         HttpLoggingInterceptor().apply {
@@ -133,7 +133,7 @@ class WebServiceImpl() : WebService {
         } catch (e: Exception) {
             null
         }
-        if (result != null) loadedImages.postValue(result!!)
+        if (result != null) loadedImages.postValue(result)
         return result
     }
 

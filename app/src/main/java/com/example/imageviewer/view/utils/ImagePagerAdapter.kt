@@ -1,20 +1,10 @@
 package com.example.imageviewer.view.utils
 
-import android.content.ContentValues
-import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.provider.MediaStore.Images
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.annotation.DrawableRes
-import androidx.core.graphics.drawable.toBitmapOrNull
-import androidx.core.net.toFile
 import androidx.core.view.forEachIndexed
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -24,12 +14,6 @@ import com.example.imageviewer.R
 import com.example.imageviewer.databinding.OpenedImageBinding
 import com.example.imageviewer.domain.CatImage
 import com.google.android.material.chip.Chip
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import java.io.OutputStream
-import java.net.URL
 import java.text.DateFormat
 import java.util.*
 
@@ -104,63 +88,14 @@ class ImagePagerAdapter(
                 likeButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
             binding.image.shareButton.setOnClickListener {
-                shareImage()
+                ContextHelper.shareImage(binding.root.context, image)
             }
             binding.image.loadButton.setOnClickListener {
-                loadImage()
+                ContextHelper.loadImage(binding.root.context, image)
             }
-        }
-
-        private fun loadImage() {
-            val context = binding.root.context
-            val resolver = context.contentResolver
-            val icon = binding.image.image.drawable.toBitmapOrNull() ?: return
-
-            Glide.with(context)
-                .load(icon)
-                .into(binding.image.image)
-
-            val share = Intent(Intent.ACTION_SEND)
-            share.type = "image/jpeg"
-
-            val values = ContentValues()
-            values.put(Images.Media.TITLE, image?.id?:"catImage")
-            values.put(Images.Media.MIME_TYPE, "image/jpeg")
-            val uri: Uri = resolver.insert(
-                Images.Media.EXTERNAL_CONTENT_URI,
-                values
-            ) ?: return
-
-            val stream: OutputStream = resolver.openOutputStream(uri) ?: return
-            icon.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            stream.close()
-            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
-        }
-
-        private fun shareImage() {
-            val context = binding.root.context
-            val resolver = context.contentResolver
-
-            val share = Intent(Intent.ACTION_SEND)
-            share.type = "image/gif"
-
-            val values = ContentValues()
-            values.put(Images.Media.TITLE, image?.id?:"catImage")
-            values.put(Images.Media.MIME_TYPE, "image/gif")
-            val uri: Uri = resolver.insert(
-                Images.Media.EXTERNAL_CONTENT_URI,
-                values
-            ) ?: return
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val stream: OutputStream? = resolver.openOutputStream(uri)
-                stream?.write(URL(image?.url).readBytes())
-                stream?.close()
-
-                share.putExtra(Intent.EXTRA_STREAM, uri)
-                context.startActivity(Intent.createChooser(share, "Share Image"))
+            binding.image.laterButton.setOnClickListener {
+                ContextHelper.setAlarm(binding.root.context, image)
             }
-
         }
 
         fun onBind(catImage: CatImage?) {
@@ -197,8 +132,10 @@ class ImagePagerAdapter(
 
         private fun onFadeButtonClick(animationsDuration: Long) {
             val direction = if (buttonFaded) -1 else 1
-            binding.image.fadeButton.animate().translationYBy((direction * 204).px)
+            binding.image.fadeButton.animate().translationYBy((direction * 272).px)
                 .rotationBy(180.0f).setDuration(animationsDuration).start()
+            binding.image.laterButton.animate().translationYBy((direction * 272).px)
+                .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
             binding.image.loadButton.animate().translationYBy((direction * 204).px)
                 .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
             binding.image.shareButton.animate().translationYBy((direction * 136).px)
