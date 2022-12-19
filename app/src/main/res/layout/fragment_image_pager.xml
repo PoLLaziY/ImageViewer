@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         tools:context=".view.fragment.ImagePagerFragment"
-        tools:listitem="@layout/opened_image"/>
+        tools:listitem="@layout/image_holder"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

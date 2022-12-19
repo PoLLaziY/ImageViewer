@@ -70,7 +70,7 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    
+
     <androidx.recyclerview.widget.RecyclerView
         android:visibility="gone"
         android:id="@+id/openedRecycler"
@@ -78,5 +78,5 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context=".view.fragment.FavoriteFragment"
-        tools:listitem="@layout/opened_image" />
+        tools:listitem="@layout/image_holder" />
 </FrameLayout>

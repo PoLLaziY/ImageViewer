@@ -15,7 +15,7 @@ import com.example.imageviewer.view.utils.ImagePagerAdapter
 import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import kotlinx.coroutines.launch
 
-class SearchFragment() : Fragment() {
+class SearchFragment : Fragment() {
 
     private val binding by lazy {
         FragmentSearchImageBinding.inflate(layoutInflater)

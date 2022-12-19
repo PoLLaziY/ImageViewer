@@ -5,12 +5,18 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.forEachIndexed
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.imageviewer.R
 import com.example.imageviewer.databinding.OpenedImageBinding
 import com.example.imageviewer.domain.CatImage
+import com.google.android.material.chip.Chip
+import java.text.DateFormat
+import java.util.*
+
 
 class ImagePagerAdapter(
     private inline val upButtonListener: (() -> Unit)? = null,
@@ -45,39 +51,50 @@ class ImagePagerAdapter(
 
         private var buttonFaded = true
         var image: CatImage? = null
+        private val adapter = BreedListAdapter()
 
         init {
-            if (upButtonListener == null) binding.upButton.visibility = View.GONE
-            else binding.upButton.setOnClickListener {
+            binding.details.recycler.adapter = adapter
+            if (upButtonListener == null) binding.image.upButton.visibility = View.GONE
+            else binding.image.upButton.setOnClickListener {
                 upButtonListener.invoke()
-                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                onImageWatched?.invoke(image ?: return@setOnClickListener, absoluteAdapterPosition)
             }
 
-            if (downButtonListener == null) binding.downButton.visibility = View.GONE
-            else binding.downButton.setOnClickListener {
+            if (downButtonListener == null) binding.image.downButton.visibility = View.GONE
+            else binding.image.downButton.setOnClickListener {
                 downButtonListener.invoke()
             }
 
-            binding.nextButton.setOnClickListener {
+            binding.image.nextButton.setOnClickListener {
                 if (absoluteAdapterPosition >= itemCount - 1) return@setOnClickListener
-                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                onImageWatched?.invoke(image ?: return@setOnClickListener, absoluteAdapterPosition)
                 recycler?.smoothScrollToPosition(absoluteAdapterPosition + 1)
             }
-            binding.previousButton.setOnClickListener {
+            binding.image.previousButton.setOnClickListener {
                 if (absoluteAdapterPosition <= 0) return@setOnClickListener
-                onImageWatched?.invoke(image?: return@setOnClickListener, absoluteAdapterPosition)
+                onImageWatched?.invoke(image ?: return@setOnClickListener, absoluteAdapterPosition)
                 recycler?.smoothScrollToPosition(absoluteAdapterPosition - 1)
             }
-            binding.fadeButton.setOnClickListener {
+            binding.image.fadeButton.setOnClickListener {
                 onFadeButtonClick(500L)
             }
-            binding.favoriteButton.setOnClickListener {
+            binding.image.favoriteButton.setOnClickListener {
                 if (image == null) return@setOnClickListener
                 favoriteButtonListener?.invoke(image!!, absoluteAdapterPosition)
             }
-            binding.likeButton.setOnClickListener {
+            binding.image.likeButton.setOnClickListener {
                 if (image == null) return@setOnClickListener
                 likeButtonListener?.invoke(image!!, absoluteAdapterPosition)
+            }
+            binding.image.shareButton.setOnClickListener {
+                ContextHelper.shareImage(binding.root.context, image)
+            }
+            binding.image.loadButton.setOnClickListener {
+                ContextHelper.loadImage(binding.root.context, image)
+            }
+            binding.image.laterButton.setOnClickListener {
+                ContextHelper.setAlarm(binding.root.context, image)
             }
         }
 
@@ -87,18 +104,43 @@ class ImagePagerAdapter(
                 onFadeButtonClick(0)
             }
             if (catImage == null) return
+
             Glide.with(binding.root)
                 .load(Uri.parse(catImage.url))
-                .into(binding.image)
+                .into(binding.image.image)
+
+
+
+            binding.details.tags.chipGroup.forEachIndexed { index, view ->
+                if (view is Chip) {
+                    val name = catImage.categories.getOrNull(index)?.name
+                    if (name.isNullOrEmpty()) view.visibility = View.GONE
+                    else {
+                        view.text = name
+                        view.visibility = View.VISIBLE
+                    }
+                }
+            }
+            val formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+            val liked = formatter.format(Date(catImage.liked))
+            val watched = formatter.format(Date(catImage.watched))
+            binding.details.liked.text = binding.root.resources.getString(R.string.liked, liked)
+            binding.details.watched.text =
+                binding.root.resources.getString(R.string.watched, watched)
+            adapter.list = catImage.breeds
         }
 
         private fun onFadeButtonClick(animationsDuration: Long) {
             val direction = if (buttonFaded) -1 else 1
-            binding.fadeButton.animate().translationYBy((direction * 136).px)
+            binding.image.fadeButton.animate().translationYBy((direction * 272).px)
                 .rotationBy(180.0f).setDuration(animationsDuration).start()
-            binding.shareButton.animate().translationYBy((direction * 136).px)
+            binding.image.laterButton.animate().translationYBy((direction * 272).px)
                 .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
-            binding.favoriteButton.animate().translationYBy((direction * 68).px)
+            binding.image.loadButton.animate().translationYBy((direction * 204).px)
+                .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
+            binding.image.shareButton.animate().translationYBy((direction * 136).px)
+                .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
+            binding.image.favoriteButton.animate().translationYBy((direction * 68).px)
                 .alpha(if (buttonFaded) 1.0f else 0.5f).setDuration(animationsDuration).start()
             buttonFaded = !buttonFaded
         }

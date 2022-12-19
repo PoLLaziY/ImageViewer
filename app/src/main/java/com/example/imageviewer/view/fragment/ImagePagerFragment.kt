@@ -14,7 +14,7 @@ import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import com.example.imageviewer.viewModel.ImagePagerViewModel
 import kotlinx.coroutines.launch
 
-class ImagePagerFragment() : Fragment() {
+class ImagePagerFragment : Fragment() {
 
     private val binding by lazy {
         FragmentImagePagerBinding.inflate(layoutInflater)

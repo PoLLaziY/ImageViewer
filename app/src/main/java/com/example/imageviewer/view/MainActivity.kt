@@ -2,11 +2,7 @@ package com.example.imageviewer.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.OnBackPressedDispatcher
-import androidx.annotation.IdRes
-import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navDeepLink
 import androidx.navigation.ui.setupWithNavController
 import com.example.imageviewer.R
 import com.example.imageviewer.databinding.ActivityMainBinding
@@ -22,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //setContentView(R.layout.opened_image)
         setContentView(binding.root)
         navController?.let { binding.bottomNavigationBar.setupWithNavController(it) }
     }
