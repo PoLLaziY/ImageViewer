@@ -9,9 +9,11 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/opened_image_margin"
+        android:layout_marginStart="@dimen/opened_image_margin"
+        android:layout_marginEnd="@dimen/opened_image_margin"
+        android:layout_marginBottom="@dimen/opened_image_margin"
         app:cardCornerRadius="@dimen/opened_image_card_corner_radius"
-        android:elevation="@dimen/opened_image_elevation">
+        app:cardElevation="@dimen/opened_image_elevation">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,8 +37,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/grid_item_margin"
-                android:layout_marginBottom="12dp"
                 android:text="@string/liked"/>
+
+            <TextView
+                android:id="@+id/alarmed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/grid_item_margin"
+                android:layout_marginBottom="12dp"
+                android:text="@string/alarmed"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"

@@ -27,11 +27,22 @@
                 app:layout_scrollFlags="scroll|snap">
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/watchedChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipBackgroundColor="@color/chip_background_colors"
+                    android:textColor="@color/white"
+                    android:checkable="true"
+                    android:checked="true"
+                    android:layout_marginStart="@dimen/grid_item_margin"
+                    android:text="WATCHED"/>
+
+                <com.google.android.material.chip.Chip
                     android:id="@+id/favoriteChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/grid_item_margin"
                     android:checkable="true"
+                    android:checked="false"
                     app:chipBackgroundColor="@color/chip_background_colors"
                     android:textColor="@color/white"
                     android:text="FAVORITE"/>
@@ -41,19 +52,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checkable="true"
+                    android:checked="false"
                     app:chipBackgroundColor="@color/chip_background_colors"
                     android:textColor="@color/white"
                     android:text="LIKED"/>
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/watchedChip"
+                    android:id="@+id/alarmed_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:chipBackgroundColor="@color/chip_background_colors"
                     android:textColor="@color/white"
                     android:checkable="true"
-                    android:checked="true"
-                    android:text="WATCHED"/>
+                    android:checked="false"
+                    android:text="ALARM"/>
 
             </com.google.android.material.chip.ChipGroup>
 

@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.App
+import com.example.imageviewer.App
 import com.example.imageviewer.databinding.FragmentImagePagerBinding
-import com.example.imageviewer.source.ImageStateUpdater
+import com.example.imageviewer.view.utils.ContextHelper
 import com.example.imageviewer.view.utils.ImagePagerAdapter
 import com.example.imageviewer.view.utils.ImagePagerLayoutManager
 import com.example.imageviewer.viewModel.ImagePagerViewModel
@@ -32,6 +32,9 @@ class ImagePagerFragment : Fragment() {
             },
             onImageWatched = { image, _ ->
                 viewModel.updateWatched(image)
+            },
+            setAlarm = { image ->
+                ContextHelper.updateAlarm(requireContext(), image, viewModel)
             }
         )
     }

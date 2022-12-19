@@ -41,11 +41,19 @@ class FavoriteFragmentViewModel(private val repository: ImageRepository) : ViewM
                 imageSource.invalidate()
             }
         }
+    var needAlarmed: Boolean = false
+        set(value) {
+            if (field == value) return
+            else {
+                field = value
+                imageSource.invalidate()
+            }
+        }
 
     private var imageSource = CatImagePagingSource()
         get() {
             if (field.invalid) {
-                field = repository.favoriteImagesFactory(needFavorite, needLiked, needWatched)
+                field = repository.favoriteImagesFactory(needFavorite, needLiked, needWatched, needAlarmed)
             }
             return field
         }

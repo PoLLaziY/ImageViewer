@@ -50,6 +50,8 @@ class ImageRepository(
         return@lazy flow
     }
 
+    private val searchAlgorithm: SearchAlgorithm = SearchAlgorithmImpl(allBreeds, allCategories)
+
     private var foundImagesSourceFactory: CatImagePagingSource? = null
     fun foundImagesSourceFactory(query: String?): CatImagePagingSource {
         foundImagesSourceFactory = CatImagePagingSource(
@@ -63,10 +65,11 @@ class ImageRepository(
     fun favoriteImagesFactory(
         favorite: Boolean = false,
         liked: Boolean = false,
-        watched: Boolean = false
+        watched: Boolean = false,
+        alarmed: Boolean = false
     ): CatImagePagingSource {
         favoriteImagesFactory = CatImagePagingSource(
-            dbService.imageSource(favorite, liked, watched)
+            dbService.imageSource(favorite, liked, watched, alarmed)
         )
         return favoriteImagesFactory!!
     }
@@ -103,11 +106,20 @@ class ImageRepository(
             }
         }
 
-    private val searchAlgorithm: SearchAlgorithm = SearchAlgorithmImpl(allBreeds, allCategories)
-
     override fun update(catImage: CatImage) {
         scope.launch {
             dbService.update(catImage)
         }
+    }
+
+    suspend fun getImages(
+        page: Int,
+        onPage: Int,
+        favoriteMoreThan: Long = -1,
+        likedMoreThan: Long = -1,
+        watchedMoreThan: Long = -1,
+        alarmTimeMore: Long = -1
+    ): List<CatImage> {
+        return dbService.getImages(page, onPage, favoriteMoreThan, likedMoreThan, watchedMoreThan, alarmTimeMore)
     }
 }
