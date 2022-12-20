@@ -1,23 +1,23 @@
 package com.example.imageviewer.view.fragment
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
 import com.example.imageviewer.App
 import com.example.imageviewer.databinding.FragmentFavoriteBinding
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.view.utils.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment() {
 
-    var bundleImage: CatImage? = null
+    private val jobs: MutableList<Job> = mutableListOf()
 
     private val binding by lazy {
         FragmentFavoriteBinding.inflate(layoutInflater)
@@ -58,7 +58,7 @@ class FavoriteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bundleImage = arguments?.getParcelable(ContextHelper.CAT_IMAGE_PARCEL)
+        val bundleImage: CatImage? = arguments?.getParcelable(ContextHelper.CAT_IMAGE_PARCEL)
         Log.i("VVV", bundleImage.toString())
 
         binding.gridRecycler.adapter = gridAdapter
@@ -74,31 +74,9 @@ class FavoriteFragment : Fragment() {
             updateCheckState()
         }
 
-        gridAdapter.addOnPagesUpdatedListener {
-            gridAdapter.notifyDataSetChanged()
-        }
+        if (bundleImage != null) openBundleImage(bundleImage)
+        else openCashedImages()
 
-        lifecycleScope.launch {
-            viewModel.images.collect {
-                gridAdapter.submitData(it)
-                if (bundleImage != null) {
-                    binding.gridRecycler.scrollToPosition(0)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.images.collect {
-                openedRecyclerAdapter.submitData(it)
-                if (bundleImage != null) {
-                    openImage().invoke(0)
-                    bundleImage = null
-                }
-                if (openedRecyclerAdapter.itemCount == 0) closeImage().invoke()
-            }
-        }
-
-        if (bundleImage != null) binding.alarmedChip.isChecked = true
     }
 
     override fun onCreateView(
@@ -108,6 +86,35 @@ class FavoriteFragment : Fragment() {
         return binding.root
     }
 
+    private fun openCashedImages() {
+
+        gridAdapter.addOnPagesUpdatedListener {
+            gridAdapter.notifyDataSetChanged()
+        }
+
+        lifecycleScope.launch {
+            viewModel.images.collect {
+                gridAdapter.submitData(it)
+            }
+        }.save(jobs)
+
+        lifecycleScope.launch {
+            viewModel.images.collect {
+                openedRecyclerAdapter.submitData(it)
+            }
+        }.save(jobs)
+    }
+
+    private fun openBundleImage(image: CatImage) {
+        lifecycleScope.launch {
+            binding.alarmedChip.isChecked = true
+            viewModel.openedImageSource(image).collect {
+                openedRecyclerAdapter.submitData(it)
+                openImage().invoke(0)
+            }
+        }.save(jobs)
+    }
+
     private fun openImage(): (Int) -> Unit = {
         binding.openedRecycler.scrollToPosition(it)
         binding.openedRecycler.visibility = View.VISIBLE
@@ -115,6 +122,10 @@ class FavoriteFragment : Fragment() {
 
     private fun closeImage(): () -> Unit = {
         binding.openedRecycler.visibility = View.GONE
+        if (jobs.size == 1) {
+            jobs.forEach { it.cancel() }
+            openCashedImages()
+        }
     }
 
     private fun updateCheckState() {
@@ -123,4 +134,8 @@ class FavoriteFragment : Fragment() {
         viewModel.needWatched = binding.watchedChip.isChecked
         viewModel.needAlarmed = binding.alarmedChip.isChecked
     }
+}
+
+fun Job.save(list: MutableList<Job>) {
+    list.add(this)
 }

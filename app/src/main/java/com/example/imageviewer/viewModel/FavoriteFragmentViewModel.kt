@@ -2,10 +2,7 @@ package com.example.imageviewer.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.source.CatImagePagingSource
 import com.example.imageviewer.source.ImageRepository
@@ -53,7 +50,12 @@ class FavoriteFragmentViewModel(private val repository: ImageRepository) : ViewM
     private var imageSource = CatImagePagingSource()
         get() {
             if (field.invalid) {
-                field = repository.favoriteImagesFactory(needFavorite, needLiked, needWatched, needAlarmed)
+                field = repository.favoriteImagesFactory(
+                    needFavorite,
+                    needLiked,
+                    needWatched,
+                    needAlarmed
+                )
             }
             return field
         }
@@ -63,4 +65,17 @@ class FavoriteFragmentViewModel(private val repository: ImageRepository) : ViewM
             imageSource
         }.flow.cachedIn(viewModelScope)
             .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+
+    fun openedImageSource(image: CatImage): StateFlow<PagingData<CatImage>> {
+        return Pager(PagingConfig(pageSize = 1)) {
+            object : PagingSource<Int, CatImage>() {
+                override fun getRefreshKey(state: PagingState<Int, CatImage>): Int? = null
+
+                override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatImage> =
+                    LoadResult.Page(listOf(image), null, null)
+
+            }
+        }.flow.cachedIn(viewModelScope)
+            .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+    }
 }

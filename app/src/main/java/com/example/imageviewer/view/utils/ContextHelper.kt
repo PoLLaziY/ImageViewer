@@ -207,6 +207,7 @@ object ContextHelper {
                 )
             )
             .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
             .build()
         else NotificationCompat.Builder(context)
             .setContentTitle("Reminder")
@@ -223,6 +224,7 @@ object ContextHelper {
                 )
             )
             .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
             .build()
     }
 }
