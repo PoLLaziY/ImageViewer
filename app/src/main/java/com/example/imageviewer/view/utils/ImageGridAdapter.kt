@@ -28,6 +28,14 @@ class ImageGridAdapter(private inline val openImage: ((position: Int) -> Unit)? 
         return holder
     }
 
+    fun findPosition(image: CatImage?): Int {
+        if (image == null) return 0
+        for (i in 0 until itemCount) {
+            Log.i("VVV", getItem(i).toString())
+            if (getItem(i)?.id == image.id) return i
+        }
+        return 0
+    }
 
     inner class ImageHolder(val binding: ImageRecyclerItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -38,6 +46,7 @@ class ImageGridAdapter(private inline val openImage: ((position: Int) -> Unit)? 
             binding.watchedImage.visibility = if (image?.watched?:0 > 0) View.VISIBLE else View.GONE
             binding.likedImage.visibility = if (image?.liked?:0 > 0) View.VISIBLE else View.GONE
             binding.favoriteImage.visibility = if (image?.favorite?:0 > 0) View.VISIBLE else View.GONE
+            binding.alarmImage.visibility = if (image?.alarmTime?:0 > 0) View.VISIBLE else View.GONE
         }
     }
 }

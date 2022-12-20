@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.App
+import com.example.imageviewer.App
 import com.example.imageviewer.databinding.FragmentSearchImageBinding
-import com.example.imageviewer.view.utils.ImageGridAdapter
-import com.example.imageviewer.view.utils.ImageGridDecorator
-import com.example.imageviewer.view.utils.ImagePagerAdapter
-import com.example.imageviewer.view.utils.ImagePagerLayoutManager
+import com.example.imageviewer.view.utils.*
 import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
@@ -41,6 +38,9 @@ class SearchFragment : Fragment() {
             onImageWatched = { image, pos ->
                 viewModel.updateWatched(image)
                 gridRecyclerAdapter.notifyItemChanged(pos)
+            },
+            setAlarm = { image ->
+                ContextHelper.updateAlarm(requireContext(), image, viewModel)
             }
         )
     }

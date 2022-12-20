@@ -16,7 +16,7 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/drawable/round_botton_background.xml" value="0.1885" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/drawable/round_button_background.xml" value="0.1805" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/activity_main.xml" value="0.264" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/breed_item.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/breed_item.xml" value="0.13044579533941236" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/favorite_recycler_item.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/fragment_favorite.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/fragment_image_pager.xml" value="0.2682291666666667" />
@@ -26,10 +26,9 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/image_holder.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/image_recycler_item.xml" value="0.2" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/image_view_pager_item.xml" value="0.264" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/ipened_image.xml" value="0.2682291666666667" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/opened_image.xml" value="0.136" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/opened_image.xml" value="0.12" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/opened_image_control_panel.xml" value="0.264" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/opened_image_details.xml" value="0.2682291666666667" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/opened_image_holder.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/layout/opened_image_tags.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/ImageViewer/app/src/main/res/menu/bottom_navigation_view_menu.xml" value="0.2682291666666667" />
       </map>

@@ -3,19 +3,29 @@
     package="com.example.imageviewer">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name="com.example.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ImageViewer">
-        <receiver
-            android:name="com.example.CatImageAlarmReceiver"
+
+        <receiver android:name=".CatImageAlarmReceiver"
+            android:enabled="true"/>
+
+        <receiver android:name=".AlarmOnReboot"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+
+        </receiver>
 
         <activity
             android:name=".view.MainActivity"

@@ -21,18 +21,22 @@ interface CatImageDao {
     @Query("SELECT * FROM images ORDER BY id LIMIT :onPage OFFSET :page")
     suspend fun allCachedImages(page: Int, onPage: Int): List<CatImage>
 
-    @Query("SELECT * FROM images " +
-            "WHERE is_favorite > :favoriteMoreThan " +
-            "AND liked > :likedMoreThan " +
-            "AND watched > :watchedMoreThan " +
-            "ORDER BY is_favorite DESC, liked DESC, watched DESC " +
-            "LIMIT :onPage OFFSET :page")
+    @Query(
+        "SELECT * FROM images " +
+                "WHERE is_favorite > :favoriteMoreThan " +
+                "AND liked > :likedMoreThan " +
+                "AND watched > :watchedMoreThan " +
+                "AND alarm_time > :alarmTimeMore " +
+                "ORDER BY alarm_time, is_favorite DESC, liked DESC, watched DESC " +
+                "LIMIT :onPage OFFSET :page"
+    )
     suspend fun getImages(
         page: Int,
         onPage: Int,
         favoriteMoreThan: Long = -1,
         likedMoreThan: Long = -1,
-        watchedMoreThan: Long = -1
+        watchedMoreThan: Long = -1,
+        alarmTimeMore: Long = -1
     ): List<CatImage>
 
     @Query("DELETE FROM images WHERE liked = 0 and is_favorite = 0")

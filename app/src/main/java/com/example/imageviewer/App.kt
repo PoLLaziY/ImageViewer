@@ -1,4 +1,4 @@
-package com.example
+package com.example.imageviewer
 
 import android.app.Application
 import com.example.di.AppComponent
