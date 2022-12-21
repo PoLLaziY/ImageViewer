@@ -13,18 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ImageViewer">
+        <activity
+            android:name=".view.MainActivityCompose"
+            android:exported="false"
+            android:label="@string/title_activity_main_compose"
+            android:theme="@style/Theme.ImageViewer" />
 
-        <receiver android:name=".CatImageAlarmReceiver"
-            android:enabled="true"/>
-
-        <receiver android:name=".AlarmOnReboot"
+        <receiver
+            android:name=".CatImageAlarmReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name=".AlarmOnReboot"
             android:enabled="true"
             android:exported="true">
-
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-
         </receiver>
 
         <activity
