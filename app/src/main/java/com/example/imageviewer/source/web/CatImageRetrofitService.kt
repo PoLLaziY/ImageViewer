@@ -2,6 +2,7 @@ package com.example.imageviewer.source.web
 
 import com.example.imageviewer.domain.Breed
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.domain.CatImageSnapshot
 import com.example.imageviewer.domain.Category
 import retrofit2.Response
 import retrofit2.http.GET
@@ -15,7 +16,7 @@ interface CatImageRetrofitService {
         @Query("api_key") apiKey: String,
         @Query("limit") onPage: Int,
         @Query("page") page: Int
-    ): Response<List<CatImage>>
+    ): Response<List<CatImageSnapshot>>
 
     @GET("images/search")
     suspend fun searchPublicImages(
@@ -24,7 +25,7 @@ interface CatImageRetrofitService {
         @Query("page") page: Int,
         @Query("category_ids") categoryIds: Int,
         @Query("breed_id") breedId: String
-    ): Response<List<CatImage>>
+    ): Response<List<CatImageSnapshot>>
 
 
     @GET("images/search")
@@ -33,7 +34,7 @@ interface CatImageRetrofitService {
         @Query("limit") onPage: Int,
         @Query("page") page: Int,
         @Query("breed_id") breedId: String
-    ): Response<List<CatImage>>
+    ): Response<List<CatImageSnapshot>>
 
 
     @GET("images/search")
@@ -42,13 +43,13 @@ interface CatImageRetrofitService {
         @Query("limit") onPage: Int,
         @Query("page") page: Int,
         @Query("category_ids") categoryIds: Int
-    ): Response<List<CatImage>>
+    ): Response<List<CatImageSnapshot>>
 
     @GET("images/{image_id}")
     suspend fun getImage(
         @Path("image_id") imageId: String,
         @Query("api_key") apiKey: String
-    ): Response<CatImage>
+    ): Response<CatImageSnapshot>
 
     @GET("breeds")
     suspend fun getAllBreeds(

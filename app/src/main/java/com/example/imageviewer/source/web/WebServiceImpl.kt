@@ -50,7 +50,7 @@ class WebServiceImpl : WebService {
 
     override suspend fun getImage(id: String): CatImage? {
         return try {
-            service.getImage(imageId = id, apiKey = ApiConst.KEY).body()
+            service.getImage(imageId = id, apiKey = ApiConst.KEY).body()?.current
         } catch (e: Exception) {
             null
         }
@@ -133,8 +133,8 @@ class WebServiceImpl : WebService {
         } catch (e: Exception) {
             null
         }
-        if (result != null) loadedImages.postValue(result)
-        return result
+        if (result != null) loadedImages.postValue(result.map { it.current })
+        return result?.map { it.current }
     }
 
 }

@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagingData
 import com.example.imageviewer.App
 import com.example.imageviewer.databinding.FragmentFavoriteBinding
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.domain.CatImageSnapshot
 import com.example.imageviewer.view.utils.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -58,7 +58,8 @@ class FavoriteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val bundleImage: CatImage? = arguments?.getParcelable(ContextHelper.CAT_IMAGE_PARCEL)
+        val bundleImage: CatImage? =
+            (arguments?.getParcelable(ContextHelper.CAT_IMAGE_PARCEL) as CatImageSnapshot?)?.current
         Log.i("VVV", bundleImage.toString())
 
         binding.gridRecycler.adapter = gridAdapter

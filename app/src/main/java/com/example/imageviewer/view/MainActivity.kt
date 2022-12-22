@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val image = (intent.extras?.get(ContextHelper.CAT_IMAGE_PARCEL) ?: return) as CatImage
         val bundle = Bundle()
-        bundle.putParcelable(ContextHelper.CAT_IMAGE_PARCEL, image)
+        bundle.putParcelable(ContextHelper.CAT_IMAGE_PARCEL, image.snapshot)
         navController?.navigate(R.id.favorite, bundle)
     }
 }

@@ -51,7 +51,7 @@ object ContextHelper {
             val intent = Intent(context, CatImageAlarmReceiver::class.java).apply {
                 action = CAT_IMAGE_ALARM
                 val bundle = Bundle().apply {
-                    this.putParcelable(CAT_IMAGE_PARCEL, image)
+                    this.putParcelable(CAT_IMAGE_PARCEL, image.snapshot)
                 }
                 this.putExtra(CAT_IMAGE_ALARM, bundle)
             }
@@ -186,7 +186,7 @@ object ContextHelper {
     ): Notification {
         val intent = Intent(context, MainActivity::class.java)
             .apply {
-                putExtra(CAT_IMAGE_PARCEL, image)
+                putExtra(CAT_IMAGE_PARCEL, image.snapshot)
             }
 
         val pendingIntent =

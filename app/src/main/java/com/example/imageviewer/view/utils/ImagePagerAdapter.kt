@@ -113,7 +113,7 @@ class ImagePagerAdapter(
 
             binding.details.tags.chipGroup.forEachIndexed { index, view ->
                 if (view is Chip) {
-                    val name = catImage.categories.getOrNull(index)?.name
+                    val name = catImage.categories?.getOrNull(index)?.name
                     if (name.isNullOrEmpty()) view.visibility = View.GONE
                     else {
                         view.text = name
