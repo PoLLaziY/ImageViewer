@@ -18,10 +18,13 @@ open class ImagePagerViewModel(
     private val repository: ImageRepository
 ) : ViewModel(), ImageStateUpdater by repository {
 
-    val images: StateFlow<PagingData<CatImage>> =
+    val imagePager =
         Pager(PagingConfig(pageSize = 20)) {
             repository.newImagesSourceFactory()
-        }.flow.cachedIn(viewModelScope)
+        }
+
+    val images: StateFlow<PagingData<CatImage>> =
+        imagePager.flow.cachedIn(viewModelScope)
             .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
 }

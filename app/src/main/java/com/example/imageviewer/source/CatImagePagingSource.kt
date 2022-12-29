@@ -1,5 +1,6 @@
 package com.example.imageviewer.source
 
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.imageviewer.domain.CatImage
@@ -33,5 +34,20 @@ class CatImagePagingSource(
         val nextKey = if (list.size < onPage) null else page + 1
         val prevKey = if (page <= ApiConst.FIRST_PAGE_INDEX) null else page - 1
         return LoadResult.Page(list, prevKey, nextKey)
+    }
+
+    companion object {
+        fun listSource(list: List<CatImage>): PagingSource<Int, CatImage> {
+            return object: PagingSource<Int, CatImage>() {
+                override fun getRefreshKey(state: PagingState<Int, CatImage>): Int? {
+                    return null
+                }
+
+                override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatImage> {
+                    return LoadResult.Page(list, null, null)
+                }
+
+            }
+        }
     }
 }

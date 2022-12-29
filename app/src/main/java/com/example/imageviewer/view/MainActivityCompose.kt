@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
-import com.example.imageviewer.view.composeview.BottomBar
+import com.example.imageviewer.view.composeview.components.BottomBar
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 
 class MainActivityCompose : ComponentActivity() {
@@ -41,7 +41,7 @@ fun DefaultPreview() {
         ) {
             Column {
                 Spacer(modifier = Modifier.weight(1f))
-                BottomBar(bottomNavigationState = bottomNavigationState)
+                BottomBar()
             }
         }
     }
