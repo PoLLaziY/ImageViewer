@@ -6,11 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.imageviewer.App
+import androidx.paging.cachedIn
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.source.CatImagePagingSource
 import com.example.imageviewer.source.ImageRepository
-import com.example.imageviewer.source.ImageSource
 import com.example.imageviewer.source.ImageStateUpdater
 import com.example.imageviewer.view.composeview.values.ALARM
 import com.example.imageviewer.view.composeview.values.Default
@@ -26,11 +25,13 @@ class HomeScreenViewModel(val repository: ImageRepository? = null) :
 
     private val imagePager =
         Pager(PagingConfig(pageSize = 20)) {
-            repository?.newImagesSourceFactory() ?: CatImagePagingSource.listSource(Default.PREVIEW_CAT_IMAGES)
+            repository?.newImagesSourceFactory()
+                ?: CatImagePagingSource.listSource(Default.PREVIEW_CAT_IMAGES)
         }
 
     val images: StateFlow<PagingData<CatImage>> =
-        imagePager.flow.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+        imagePager.flow.cachedIn(viewModelScope)
+            .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     fun onClick(context: Context, key: String, catImage: CatImage?) {
         if (catImage == null) return

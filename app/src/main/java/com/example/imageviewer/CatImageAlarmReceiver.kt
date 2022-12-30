@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.domain.CatImageSnapshot
 import com.example.imageviewer.view.utils.ContextHelper
 
 class CatImageAlarmReceiver : BroadcastReceiver() {
@@ -16,7 +17,7 @@ class CatImageAlarmReceiver : BroadcastReceiver() {
         if (p1?.action != ContextHelper.CAT_IMAGE_ALARM) return
 
         val bundle: Bundle = p1.getBundleExtra(ContextHelper.CAT_IMAGE_ALARM)?: return
-        val image: CatImage = bundle.getParcelable(ContextHelper.CAT_IMAGE_PARCEL)?: return
+        val image: CatImageSnapshot = bundle.getParcelable(ContextHelper.CAT_IMAGE_PARCEL)?: return
 
         if (image.alarmTime == 0L) return
 

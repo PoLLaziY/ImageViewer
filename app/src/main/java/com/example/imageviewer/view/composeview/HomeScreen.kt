@@ -1,62 +1,112 @@
 package com.example.imageviewer.view.composeview
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.imageviewer.R
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.view.composeview.components.OpenedImage
-import com.example.imageviewer.view.composeview.values.Default
-import com.example.imageviewer.view.composeview.values.LEFT
-import com.example.imageviewer.view.composeview.values.RIGHT
+import com.example.imageviewer.view.composeview.components.ImagePager
+import com.example.imageviewer.view.composeview.values.LOAD_ERROR
+import com.example.imageviewer.view.composeview.values.PROGRESS_BAR_STROKE_WIGHT
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.imageviewer.view.ui.theme.Orange
+import com.example.imageviewer.viewModel.HomeScreenViewModel
 
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
-    images: List<CatImage> = Default.PREVIEW_CAT_IMAGES,
-    buttonListener: ((String) -> Unit)? = null
-) {
-    val scope = rememberCoroutineScope { Dispatchers.Main }
-    val scrollState = rememberLazyListState()
-    BoxWithConstraints(modifier.fillMaxSize()) {
-        val screen = this
+fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = viewModel()) {
+    val imagesPagingData = viewModel.images.collectAsLazyPagingItems()
+    val context = LocalContext.current
+    when (imagesPagingData.loadState.refresh) {
+        LoadState.Loading -> {
+            LoadingProgressBar(modifier)
+        }
+        is LoadState.Error -> {
+            ErrorHolder(modifier)
+        }
+        else -> {
+            val list = imagesPagingData.asStateList()
+            ImagePager(
+                modifier = modifier,
+                images = list,
+                buttonListener = { key, index -> viewModel.onClick(context, key, list[index]) }
+            )
+        }
+    }
+}
 
-        LazyRow(
-            userScrollEnabled = false,
-            state = scrollState
+@Composable
+fun LoadingProgressBar(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
+        Box(
+            modifier = modifier
+                .aspectRatio(1f)
+                .fillMaxSize()
+                .align(Alignment.Center)
         ) {
-            items(images) { catImage ->
-                OpenedImage(
+            CircularProgressIndicator(
+                modifier = modifier
+                    .fillMaxSize(0.6f)
+                    .align(Alignment.Center),
+                color = Orange,
+                strokeWidth = PROGRESS_BAR_STROKE_WIGHT
+            )
+        }
+
+    }
+}
+
+@Composable
+fun ErrorHolder(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .aspectRatio(1f)
+            ) {
+                Image(
                     modifier = Modifier
-                        .width(screen.maxWidth)
-                        .height(screen.maxHeight),
-                    buttonListener = {
-                        if (!isScrollInit(
-                                it,
-                                images,
-                                scrollState,
-                                scope
-                            )
-                        ) buttonListener?.invoke(it)
-                    },
-                    image = catImage
+                        .fillMaxSize(0.6f)
+                        .align(Alignment.Center),
+                    painter = painterResource(id = R.drawable.ic_baseline_cancel_24),
+                    contentDescription = LOAD_ERROR
                 )
             }
+            Text(
+                text = LOAD_ERROR,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.h3,
+                color = MaterialTheme.colors.onPrimary
+            )
         }
+    }
+}
+
+@Preview("Dark ErrorHolder", uiMode = UI_MODE_NIGHT_YES)
+@Preview("ErrorHolder")
+@Composable
+fun ErrorHolderPreview() {
+    ImageViewerTheme {
+        ErrorHolder()
     }
 }
 
@@ -64,60 +114,20 @@ fun HomeScreen(
 @Preview("HomeScreen")
 @Composable
 fun HomeScreenPreview() {
-    val scope = rememberCoroutineScope { Dispatchers.Main }
-
-    val scrollState = rememberLazyListState()
-    val onClick: (String) -> Unit = { key ->
-        val nextIndex = when (key) {
-            LEFT -> {
-                val index = scrollState.firstVisibleItemIndex - 1
-                if (index < 0) -1
-                else index
-            }
-            RIGHT -> {
-                val index = scrollState.firstVisibleItemIndex + 1
-                if (index > 10) -1
-                else index
-            }
-            else -> -1
-        }
-        if (nextIndex >= 0) {
-            scope.launch {
-                scrollState.animateScrollToItem(nextIndex)
-            }
-        }
-    }
-
-
     ImageViewerTheme {
-        HomeScreen(buttonListener = onClick)
+        HomeScreen()
     }
 }
 
-fun isScrollInit(
-    key: String,
-    images: List<*>,
-    state: LazyListState,
-    scope: CoroutineScope
-): Boolean {
-    val nextIndex = when (key) {
-        LEFT -> {
-            val index = state.firstVisibleItemIndex - 1
-            if (index < 0) return false
-            else index
+
+fun LazyPagingItems<CatImage>.asStateList(): List<CatImage?> {
+    val pagingItem = this
+    return object : AbstractList<CatImage?>() {
+        override val size: Int = pagingItem.itemCount
+
+        override fun get(index: Int): CatImage? {
+            return pagingItem[index]
         }
-        RIGHT -> {
-            val index = state.firstVisibleItemIndex + 1
-            if (index > images.lastIndex) return false
-            else index
-        }
-        else -> return false
+
     }
-    if (nextIndex >= 0) {
-        scope.launch {
-            state.animateScrollToItem(nextIndex)
-        }
-        return true
-    }
-    return false
 }

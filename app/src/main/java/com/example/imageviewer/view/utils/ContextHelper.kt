@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.IconCompat
 import com.example.imageviewer.CatImageAlarmReceiver
 import com.example.imageviewer.R
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.domain.CatImageSnapshot
 import com.example.imageviewer.source.ImageStateUpdater
 import com.example.imageviewer.view.MainActivity
 import kotlinx.coroutines.CoroutineScope
@@ -153,7 +154,7 @@ object ContextHelper {
         }
     }
 
-    fun updateNotification(context: Context?, image: CatImage) {
+    fun updateNotification(context: Context?, image: CatImageSnapshot) {
         if (context == null) return
 
         val notificationManager =
@@ -180,13 +181,13 @@ object ContextHelper {
 
     private fun buildNotification(
         context: Context,
-        image: CatImage,
+        image: CatImageSnapshot,
         bitmap: Bitmap?,
         channelId: String? = null
     ): Notification {
         val intent = Intent(context, MainActivity::class.java)
             .apply {
-                putExtra(CAT_IMAGE_PARCEL, image.snapshot)
+                putExtra(CAT_IMAGE_PARCEL, image)
             }
 
         val pendingIntent =
