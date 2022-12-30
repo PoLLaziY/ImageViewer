@@ -26,10 +26,11 @@ import kotlinx.coroutines.launch
 fun ImagePager(
     modifier: Modifier = Modifier,
     images: List<CatImage?> = Default.PREVIEW_CAT_IMAGES,
-    buttonListener: ((String, Int) -> Unit)? = null
+    controlButtonListener: ((String, Int) -> Unit)? = null,
+    scrollState: LazyListState = rememberLazyListState(),
+    mainScope: CoroutineScope = rememberCoroutineScope { Dispatchers.Main },
+    onClose: ((Int) -> Unit)? = null
 ) {
-    val scope = rememberCoroutineScope { Dispatchers.Main }
-    val scrollState = rememberLazyListState()
     BoxWithConstraints(modifier.fillMaxSize()) {
         val screen = this
 
@@ -38,24 +39,32 @@ fun ImagePager(
             state = scrollState
         ) {
             itemsIndexed(images) { index, catImage ->
-                OpenedImage(
-                    modifier = Modifier
-                        .width(screen.maxWidth)
-                        .height(screen.maxHeight),
-                    buttonListener = {
-                        if (!isScrollInit(
-                                it,
-                                images,
-                                scrollState,
-                                scope
-                            )
-                        ) buttonListener?.invoke(it, index)
-                    },
-                    image = catImage
-                )
+                if (onClose != null) {
+                    OpenedImage(
+                        modifier = Modifier
+                            .width(screen.maxWidth)
+                            .height(screen.maxHeight),
+                        buttonListener = {
+                            if (!isScrollInit(
+                                    it,
+                                    images,
+                                    scrollState,
+                                    mainScope
+                                )
+                            ) controlButtonListener?.invoke(it, index)
+                        },
+                        image = catImage,
+                        onCloseImage = onClose.with(index)
+                    )
+                }
             }
         }
     }
+}
+
+fun <T, K> ((T) -> K)?.with(index: T): (() -> K)? {
+    if (this == null) return null
+    else return { this.invoke(index) }
 }
 
 @Preview("Dark ImagePager", uiMode = Configuration.UI_MODE_NIGHT_YES)

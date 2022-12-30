@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 class HomeScreenViewModel(val repository: ImageRepository? = null) :
-    ViewModel(), ImageStateUpdater {
+    ViewModel(), OpenedImageOnClickListener {
 
     private val imagePager =
         Pager(PagingConfig(pageSize = 20)) {
@@ -32,17 +32,6 @@ class HomeScreenViewModel(val repository: ImageRepository? = null) :
     val images: StateFlow<PagingData<CatImage>> =
         imagePager.flow.cachedIn(viewModelScope)
             .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
-
-    fun onClick(context: Context, key: String, catImage: CatImage?) {
-        if (catImage == null) return
-        when (key) {
-            FAVORITE -> updateFavorite(catImage)
-            LIKE -> updateLiked(catImage)
-            ALARM -> {
-                ContextHelper.updateAlarm(context, catImage, this)
-            }
-        }
-    }
 
     override fun update(catImage: CatImage) {
         repository?.update(catImage)

@@ -39,11 +39,11 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = v
             ErrorHolder(modifier)
         }
         else -> {
-            val list = imagesPagingData.asStateList()
+            val list = imagesPagingData.toAbstractList()
             ImagePager(
                 modifier = modifier,
                 images = list,
-                buttonListener = { key, index -> viewModel.onClick(context, key, list[index]) }
+                controlButtonListener = { key, index -> viewModel.onClick(context, key, list[index]) }
             )
         }
     }
@@ -120,7 +120,7 @@ fun HomeScreenPreview() {
 }
 
 
-fun LazyPagingItems<CatImage>.asStateList(): List<CatImage?> {
+fun LazyPagingItems<CatImage>.toAbstractList(): List<CatImage?> {
     val pagingItem = this
     return object : AbstractList<CatImage?>() {
         override val size: Int = pagingItem.itemCount

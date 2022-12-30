@@ -3,6 +3,7 @@ package com.example.imageviewer.view.composeview
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -29,10 +30,14 @@ const val GRID_ITEM_ICON_SIZE_RATIO = 0.2f
 @Composable
 fun ImageGridItem(
     modifier: Modifier = Modifier, catImage: CatImage? = Default.PREVIEW_CAT_IMAGE,
-    imageStateIcons: List<ImageStateIcon> = Buttons.IMAGE_STATE_ICONS
+    imageStateIcons: List<ImageStateIcon> = Buttons.IMAGE_STATE_ICONS,
+    onClick: (() -> Unit)? = null
 ) {
     Card(
-        modifier = modifier.fillMaxSize().aspectRatio(1.0f),
+        modifier = modifier
+            .fillMaxSize()
+            .aspectRatio(1.0f)
+            .clickable { onClick?.invoke() },
         shape = RoundedCornerShape(16.dp)
     ) {
         Box(Modifier.background(Orange)) {
@@ -49,7 +54,9 @@ fun ImageGridItem(
                 1.0f - GRID_ITEM_ICON_PADDING_RATIO
             }
 
-            Box(modifier = Modifier.fillMaxSize(padding).align(Alignment.Center)) {
+            Box(modifier = Modifier
+                .fillMaxSize(padding)
+                .align(Alignment.Center)) {
                 imageStateIcons.forEach {
                     if (it.enabler(catImage)) {
                         ImageStateIcon(modifier = Modifier.align(it.alignment), icon = it)
@@ -68,12 +75,12 @@ fun ImageStateIcon(modifier: Modifier = Modifier, icon: ImageStateIcon) {
     val iconSize = remember {
         GRID_ITEM_ICON_SIZE_RATIO / (1.0f - GRID_ITEM_ICON_PADDING_RATIO)
     }
-        Image(
-            modifier = modifier
-                .fillMaxSize(iconSize),
-            painter = painterResource(id = icon.icon),
-            contentDescription = icon.name
-        )
+    Image(
+        modifier = modifier
+            .fillMaxSize(iconSize),
+        painter = painterResource(id = icon.icon),
+        contentDescription = icon.name
+    )
 }
 
 @Preview("Dark GridItem", uiMode = UI_MODE_NIGHT_YES)

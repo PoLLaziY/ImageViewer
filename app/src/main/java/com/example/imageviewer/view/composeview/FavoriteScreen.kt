@@ -19,15 +19,16 @@ import com.example.imageviewer.view.composeview.components.ImagePager
 import com.example.imageviewer.view.composeview.components.SearchBar
 import com.example.imageviewer.view.composeview.values.Default
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
+import com.example.imageviewer.viewModel.FavoriteScreenViewModel
 import com.example.imageviewer.viewModel.SearchScreenViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun SearchScreen(
+fun FavoriteScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchScreenViewModel = viewModel(),
+    viewModel: FavoriteScreenViewModel = viewModel(),
     mainScope: CoroutineScope = rememberCoroutineScope { Dispatchers.Main }
 ) {
     val pagerData = viewModel.images.collectAsLazyPagingItems()
@@ -37,23 +38,20 @@ fun SearchScreen(
     GridWithOpenableItems(
         modifier = modifier,
         images = list,
-        onQueryChanged = {
-            viewModel.query = it
-        },
         controlButtonListener = { key, position ->
             viewModel.onClick(context, key, list[position])
         },
         mainScope = mainScope,
-        spanCount = 1
+        spanCount = 3
     )
 
 }
 
-@Preview("Dark SearchScreen", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview("SearchScreen")
+@Preview("Dark FavoriteScreen", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview("FavoriteScreen")
 @Composable
-fun SearchScreenPreview() {
+fun FavoriteScreenPreview() {
     ImageViewerTheme {
-        SearchScreen()
+        FavoriteScreen()
     }
 }

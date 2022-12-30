@@ -6,11 +6,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.imageviewer.R
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.view.composeview.values.Buttons.OPENED_IMAGE_BUTTONS
 import com.example.imageviewer.view.composeview.values.*
+import com.example.imageviewer.view.composeview.values.Buttons.OPENED_IMAGE_BUTTONS
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.view.ui.theme.Orange
 
@@ -27,7 +29,8 @@ import com.example.imageviewer.view.ui.theme.Orange
 fun OpenedImage(
     modifier: Modifier = Modifier,
     image: CatImage? = Default.PREVIEW_CAT_IMAGE,
-    buttonListener: ((id: String) -> Unit)? = null
+    buttonListener: ((id: String) -> Unit)? = null,
+    onCloseImage: (() -> Unit)? = null
 ) {
     Column(
         modifier = modifier
@@ -35,7 +38,7 @@ fun OpenedImage(
             .padding(start = OPENED_IMAGE_PADDING, end = OPENED_IMAGE_PADDING)
     ) {
         Spacer(modifier = Modifier.height(OPENED_IMAGE_PADDING))
-        ImageHolder(Modifier.weight(1f), image)
+        ImageHolder(Modifier.weight(1f), image, onCloseImage)
         Spacer(modifier = Modifier.height(OPENED_IMAGE_PADDING))
         Controller(catImage = image, buttonListener = buttonListener)
         //Spacer(modifier = Modifier.height(OPENED_IMAGE_PADDING))
@@ -44,19 +47,35 @@ fun OpenedImage(
 }
 
 @Composable
-fun ImageHolder(modifier: Modifier = Modifier, catImage: CatImage?) {
+fun ImageHolder(modifier: Modifier = Modifier, catImage: CatImage?, onCloseImage: (() -> Unit)?) {
     Card(
         modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(OPENED_IMAGE_CARD_RADIUS)
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(
-                catImage?.url,
-                placeholder = painterResource(id = R.drawable.ic_launcher_background)
-            ),
-            contentDescription = catImage?.url
-        )
+        Box {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = rememberAsyncImagePainter(
+                    catImage?.url,
+                    placeholder = painterResource(id = R.drawable.ic_launcher_background)
+                ),
+                contentDescription = catImage?.url
+            )
+            if (onCloseImage != null) IconButton(
+                modifier = Modifier.align(Alignment.TopCenter),
+                onClick = onCloseImage) {
+                Icon(
+                    modifier = Modifier
+                        .size(OPENED_IMAGE_BUTTON_DIMEN)
+                        .padding(
+                            OPENED_IMAGE_BUTTON_MARGIN
+                        ),
+                    painter = painterResource(id = R.drawable.ic_baseline_keyboard_arrow_up_24),
+                    contentDescription = ""
+                )
+            }
+        }
     }
 }
 
@@ -77,21 +96,23 @@ fun Controller(
         Column() {
             Spacer(modifier = Modifier.height(OPENED_IMAGE_BUTTON_MARGIN))
             buttonList.forEach { list ->
-                Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
                     list.forEach { item ->
-                            IconButton(
-                                onClick = { buttonListener?.invoke(item.label) },
-                                Modifier.size(OPENED_IMAGE_BUTTON_DIMEN)
-                            ) {
-                                Image(
-                                    modifier = Modifier.size(OPENED_IMAGE_BUTTON_DIMEN),
-                                    painter = painterResource(
-                                        id = item.icon(item.enabler?.invoke(catImage))
-                                    ),
-                                    contentDescription = item.label
-                                )
-                            }
+                        IconButton(
+                            onClick = { buttonListener?.invoke(item.label) },
+                            Modifier.size(OPENED_IMAGE_BUTTON_DIMEN)
+                        ) {
+                            Image(
+                                modifier = Modifier.size(OPENED_IMAGE_BUTTON_DIMEN),
+                                painter = painterResource(
+                                    id = item.icon(item.enabler?.invoke(catImage))
+                                ),
+                                contentDescription = item.label
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(OPENED_IMAGE_BUTTON_MARGIN))

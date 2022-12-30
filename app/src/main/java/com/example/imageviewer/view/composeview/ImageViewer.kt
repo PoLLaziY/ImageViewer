@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imageviewer.view.composeview.components.BottomBar
+import com.example.imageviewer.view.composeview.components.ImageGrid
 import com.example.imageviewer.view.composeview.values.HOME
 import com.example.imageviewer.view.composeview.values.SEARCH
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
