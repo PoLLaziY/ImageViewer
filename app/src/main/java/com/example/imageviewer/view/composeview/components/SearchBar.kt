@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -19,10 +17,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imageviewer.R
+import com.example.imageviewer.view.composeview.values.BACKGROUND_PLAN_ELEVATION
 import com.example.imageviewer.view.composeview.values.CANCEL
-import com.example.imageviewer.view.composeview.values.FIRST_PLAN_ELEVATION
+import com.example.imageviewer.view.composeview.values.CONTROL_PANEL_PLAN_ELEVATION
 import com.example.imageviewer.view.composeview.values.SEARCH
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
+import com.example.imageviewer.view.ui.theme.Orange
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -35,8 +35,12 @@ fun SearchBar(
     val focusManager = LocalFocusManager.current
     var focus by remember { mutableStateOf(false) }
 
-    Card(modifier = modifier, elevation = FIRST_PLAN_ELEVATION) {
-        OutlinedTextField(modifier = modifier
+    Card(
+        modifier = modifier,
+        elevation = BACKGROUND_PLAN_ELEVATION,
+        backgroundColor = MaterialTheme.colors.primary
+    ) {
+        OutlinedTextField(modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
             .onFocusChanged {
@@ -51,12 +55,14 @@ fun SearchBar(
                             focusManager.clearFocus()
                         },
                         painter = painterResource(id = R.drawable.ic_baseline_cancel_24),
-                        contentDescription = CANCEL
+                        contentDescription = CANCEL,
+                        tint = if (focus) Orange else MaterialTheme.colors.onPrimary
                     )
                 } else {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_search_24),
-                        contentDescription = SEARCH
+                        contentDescription = SEARCH,
+                        tint = if (focus) Orange else MaterialTheme.colors.onPrimary
                     )
                 }
             },

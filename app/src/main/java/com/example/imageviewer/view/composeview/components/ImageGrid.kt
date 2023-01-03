@@ -10,11 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.view.composeview.ImageGridItem
 import com.example.imageviewer.view.composeview.values.Default
+import com.example.imageviewer.view.composeview.values.OPENED_IMAGE_PADDING
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
-
-val GRID_ITEM_PADDING = 8.dp
 
 @Composable
 fun ImageGrid(
@@ -28,13 +26,13 @@ fun ImageGrid(
         state = scrollState,
         modifier = modifier,
         columns = GridCells.Fixed(spanCount),
-        horizontalArrangement = Arrangement.spacedBy(GRID_ITEM_PADDING),
-        verticalArrangement = Arrangement.spacedBy(GRID_ITEM_PADDING),
-        contentPadding = PaddingValues(GRID_ITEM_PADDING)
+        horizontalArrangement = Arrangement.spacedBy(OPENED_IMAGE_PADDING),
+        verticalArrangement = Arrangement.spacedBy(OPENED_IMAGE_PADDING),
+        contentPadding = PaddingValues(OPENED_IMAGE_PADDING)
     ) {
 
         itemsIndexed(images) { index, item ->
-            ImageGridItem(catImage = item, onClick = { onClick?.invoke(index) })
+            ImageGridItem(catImage = item, onClick = onClick?.with(index))
         }
     }
 }

@@ -5,9 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +33,6 @@ fun OpenedImage(
     Column(
         modifier = modifier
             //.verticalScroll(state = rememberScrollState())
-            .padding(start = OPENED_IMAGE_PADDING, end = OPENED_IMAGE_PADDING)
     ) {
         Spacer(modifier = Modifier.height(OPENED_IMAGE_PADDING))
         ImageHolder(Modifier.weight(1f), image, onCloseImage)
@@ -50,8 +47,11 @@ fun OpenedImage(
 fun ImageHolder(modifier: Modifier = Modifier, catImage: CatImage?, onCloseImage: (() -> Unit)?) {
     Card(
         modifier = modifier
+            .padding(start = OPENED_IMAGE_PADDING, end = OPENED_IMAGE_PADDING)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(OPENED_IMAGE_CARD_RADIUS)
+        shape = MaterialTheme.shapes.large,
+        backgroundColor = MaterialTheme.colors.primary,
+        elevation = CONTENT_PLAN_ELEVATION
     ) {
         Box {
             Image(
@@ -88,10 +88,9 @@ fun Controller(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        shape = RoundedCornerShape(
-            topStart = OPENED_IMAGE_CARD_RADIUS,
-            topEnd = OPENED_IMAGE_CARD_RADIUS
-        )
+        shape = MaterialTheme.shapes.medium,
+        backgroundColor = MaterialTheme.colors.primary,
+        elevation = CONTROL_PANEL_PLAN_ELEVATION
     ) {
         Column() {
             Spacer(modifier = Modifier.height(OPENED_IMAGE_BUTTON_MARGIN))
@@ -134,8 +133,8 @@ fun Details() {
     }
 }
 
-@Preview(name = "Dark OpenedImage", uiMode = UI_MODE_NIGHT_YES)
-@Preview(name = "OpenedImage")
+@Preview(name = "Dark OpenedImage", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "OpenedImage", showBackground = true)
 @Composable
 fun OpenedImagePreview() {
     val catImage by remember { mutableStateOf(Default.PREVIEW_CAT_IMAGE) }
@@ -158,7 +157,9 @@ fun OpenedImagePreview() {
     }
 
     ImageViewerTheme {
-        OpenedImage(buttonListener = listener, image = catImage)
+        Surface {
+            OpenedImage(buttonListener = listener, image = catImage)
+        }
     }
 }
 

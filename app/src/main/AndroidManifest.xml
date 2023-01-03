@@ -13,11 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ImageViewer">
+
         <activity
             android:name=".view.MainActivityCompose"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_main_compose"
-            android:theme="@style/Theme.ImageViewer" />
+            android:theme="@style/Theme.ImageViewer">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".CatImageAlarmReceiver"
@@ -34,11 +41,7 @@
         <activity
             android:name=".view.MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

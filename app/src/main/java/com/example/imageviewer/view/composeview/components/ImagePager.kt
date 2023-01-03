@@ -39,24 +39,22 @@ fun ImagePager(
             state = scrollState
         ) {
             itemsIndexed(images) { index, catImage ->
-                if (onClose != null) {
-                    OpenedImage(
-                        modifier = Modifier
-                            .width(screen.maxWidth)
-                            .height(screen.maxHeight),
-                        buttonListener = {
-                            if (!isScrollInit(
-                                    it,
-                                    images,
-                                    scrollState,
-                                    mainScope
-                                )
-                            ) controlButtonListener?.invoke(it, index)
-                        },
-                        image = catImage,
-                        onCloseImage = onClose.with(index)
-                    )
-                }
+                OpenedImage(
+                    modifier = Modifier
+                        .width(screen.maxWidth)
+                        .height(screen.maxHeight),
+                    buttonListener = {
+                        if (!isScrollInit(
+                                it,
+                                images,
+                                scrollState,
+                                mainScope
+                            )
+                        ) controlButtonListener?.invoke(it, index)
+                    },
+                    image = catImage,
+                    onCloseImage = onClose.with(index)
+                )
             }
         }
     }
@@ -67,8 +65,8 @@ fun <T, K> ((T) -> K)?.with(index: T): (() -> K)? {
     else return { this.invoke(index) }
 }
 
-@Preview("Dark ImagePager", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview("ImagePager")
+@Preview("Dark ImagePager", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview("ImagePager", showBackground = true)
 @Composable
 fun ImagePagerPreview() {
     ImageViewerTheme {

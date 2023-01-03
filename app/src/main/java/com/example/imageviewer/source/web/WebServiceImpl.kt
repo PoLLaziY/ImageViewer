@@ -2,14 +2,12 @@ package com.example.imageviewer.source.web
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.imageviewer.BuildConfig
 import com.example.imageviewer.domain.Breed
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.domain.Category
 import com.example.imageviewer.source.ImageSource
 import com.example.imageviewer.utils.SearchAlgorithm
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -23,15 +21,8 @@ interface WebService {
 
 class WebServiceImpl : WebService {
 
-    private val interceptor by lazy {
-        HttpLoggingInterceptor().apply {
-            this.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BASIC
-            else HttpLoggingInterceptor.Level.NONE
-        }
-    }
-
     private val okHttpClient by lazy {
-        OkHttpClient.Builder().addInterceptor(interceptor).build()
+        OkHttpClient.Builder().build()
     }
 
     private val retrofit by lazy {

@@ -1,9 +1,7 @@
 package com.example.di.module
 
 import com.example.imageviewer.source.ImageRepository
-import com.example.imageviewer.viewModel.FavoriteFragmentViewModel
-import com.example.imageviewer.viewModel.ImagePagerViewModel
-import com.example.imageviewer.viewModel.SearchFragmentViewModel
+import com.example.imageviewer.viewModel.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -24,4 +22,19 @@ class ViewModelsModule {
     @Provides
     fun provideFavoriteFragmentViewModel(repository: ImageRepository): FavoriteFragmentViewModel =
         FavoriteFragmentViewModel(repository)
+
+    @Singleton
+    @Provides
+    fun provideHomeScreenViewModel(repository: ImageRepository): HomeScreenViewModel =
+        HomeScreenViewModel(repository = repository)
+
+    @Singleton
+    @Provides
+    fun provideSearchScreenViewModel(repository: ImageRepository): SearchScreenViewModel =
+        SearchScreenViewModel(repository = repository)
+
+    @Singleton
+    @Provides
+    fun provideFavoriteScreenViewModel(repository: ImageRepository): FavoriteScreenViewModel =
+        FavoriteScreenViewModel(repository = repository)
 }

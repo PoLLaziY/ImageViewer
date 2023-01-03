@@ -1,11 +1,11 @@
 package com.example.imageviewer.view.composeview
 
-import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +28,11 @@ import com.example.imageviewer.view.ui.theme.Orange
 import com.example.imageviewer.viewModel.HomeScreenViewModel
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = viewModel()) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    homeScreenViewModel: HomeScreenViewModel? = viewModel()
+) {
+    val viewModel: HomeScreenViewModel = homeScreenViewModel ?: viewModel()
     val imagesPagingData = viewModel.images.collectAsLazyPagingItems()
     val context = LocalContext.current
     when (imagesPagingData.loadState.refresh) {
@@ -43,7 +47,13 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = v
             ImagePager(
                 modifier = modifier,
                 images = list,
-                controlButtonListener = { key, index -> viewModel.onClick(context, key, list[index]) }
+                controlButtonListener = { key, index ->
+                    viewModel.onClick(
+                        context,
+                        key,
+                        list[index]
+                    )
+                }
             )
         }
     }
@@ -95,27 +105,31 @@ fun ErrorHolder(modifier: Modifier = Modifier) {
                 text = LOAD_ERROR,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h3,
-                color = MaterialTheme.colors.onPrimary
+                color = MaterialTheme.colors.onBackground
             )
         }
     }
 }
 
-@Preview("Dark ErrorHolder", uiMode = UI_MODE_NIGHT_YES)
-@Preview("ErrorHolder")
+@Preview("Dark ErrorHolder", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
+@Preview("ErrorHolder", showBackground = true)
 @Composable
 fun ErrorHolderPreview() {
     ImageViewerTheme {
-        ErrorHolder()
+        Surface {
+            ErrorHolder()
+        }
     }
 }
 
-@Preview("Dark HomeScreen", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview("HomeScreen")
+@Preview("Dark HomeScreen", uiMode = UI_MODE_NIGHT_YES)
+@Preview("HomeScreen", showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     ImageViewerTheme {
-        HomeScreen()
+        Surface {
+            HomeScreen()
+        }
     }
 }
 

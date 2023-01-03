@@ -28,9 +28,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun FavoriteScreen(
     modifier: Modifier = Modifier,
-    viewModel: FavoriteScreenViewModel = viewModel(),
+    favoriteViewModel: FavoriteScreenViewModel? = viewModel(),
     mainScope: CoroutineScope = rememberCoroutineScope { Dispatchers.Main }
 ) {
+    val viewModel = favoriteViewModel?: viewModel()
     val pagerData = viewModel.images.collectAsLazyPagingItems()
     val list = pagerData.toAbstractList()
     val context = LocalContext.current
