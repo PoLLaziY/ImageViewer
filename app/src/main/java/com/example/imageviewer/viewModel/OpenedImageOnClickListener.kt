@@ -3,10 +3,10 @@ package com.example.imageviewer.viewModel
 import android.content.Context
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.source.ImageStateUpdater
-import com.example.imageviewer.view.composeview.values.ALARM
-import com.example.imageviewer.view.composeview.values.FAVORITE
-import com.example.imageviewer.view.composeview.values.LIKE
-import com.example.imageviewer.view.utils.ContextHelper
+import com.example.imageviewer.view.values.ALARM
+import com.example.imageviewer.view.values.FAVORITE
+import com.example.imageviewer.view.values.LIKE
+import com.example.imageviewer.view.values.ContextHelper
 
 interface OpenedImageOnClickListener: ImageStateUpdater {
 

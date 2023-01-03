@@ -1,8 +1,8 @@
 package com.example.imageviewer
 
 import android.app.Application
-import com.example.di.AppComponent
-import com.example.di.DaggerAppComponent
+import com.example.imageviewer.di.AppComponent
+import com.example.imageviewer.di.DaggerAppComponent
 
 class App : Application() {
 

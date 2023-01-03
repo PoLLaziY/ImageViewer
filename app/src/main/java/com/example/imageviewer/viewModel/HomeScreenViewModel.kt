@@ -1,6 +1,5 @@
 package com.example.imageviewer.viewModel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -10,12 +9,7 @@ import androidx.paging.cachedIn
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.source.CatImagePagingSource
 import com.example.imageviewer.source.ImageRepository
-import com.example.imageviewer.source.ImageStateUpdater
-import com.example.imageviewer.view.composeview.values.ALARM
-import com.example.imageviewer.view.composeview.values.Default
-import com.example.imageviewer.view.composeview.values.FAVORITE
-import com.example.imageviewer.view.composeview.values.LIKE
-import com.example.imageviewer.view.utils.ContextHelper
+import com.example.imageviewer.view.values.Default
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

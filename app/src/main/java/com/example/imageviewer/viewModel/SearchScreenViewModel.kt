@@ -9,7 +9,7 @@ import androidx.paging.*
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.source.CatImagePagingSource
 import com.example.imageviewer.source.ImageRepository
-import com.example.imageviewer.view.composeview.values.Default
+import com.example.imageviewer.view.values.Default
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

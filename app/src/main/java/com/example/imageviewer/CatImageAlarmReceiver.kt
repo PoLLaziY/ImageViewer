@@ -5,9 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.domain.CatImageSnapshot
-import com.example.imageviewer.view.utils.ContextHelper
+import com.example.imageviewer.view.values.ContextHelper
 
 class CatImageAlarmReceiver : BroadcastReceiver() {
 

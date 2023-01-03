@@ -15,7 +15,7 @@
         android:theme="@style/Theme.ImageViewer">
 
         <activity
-            android:name=".view.MainActivityCompose"
+            android:name=".MainActivityCompose"
             android:exported="true"
             android:label="@string/title_activity_main_compose"
             android:theme="@style/Theme.ImageViewer">
@@ -37,12 +37,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".view.MainActivity"
-            android:exported="true">
-
-        </activity>
     </application>
 
 </manifest>

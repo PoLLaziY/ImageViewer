@@ -3,7 +3,7 @@ package com.example.imageviewer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.example.imageviewer.view.utils.ContextHelper
+import com.example.imageviewer.view.values.ContextHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
