@@ -1,4 +1,4 @@
-package com.example.imageviewer.view.components
+package com.example.imageviewer.view.components.composition
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Box

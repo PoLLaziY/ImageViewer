@@ -1,17 +1,19 @@
-package com.example.imageviewer.view.components
+package com.example.imageviewer.view.components.composition
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.view.components.ImageGridItem
+import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.view.values.Default
 import com.example.imageviewer.view.values.OPENED_IMAGE_PADDING
-import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 
 @Composable
 fun ImageGrid(
@@ -41,9 +43,11 @@ fun ImageGrid(
 @Composable
 fun PreviewImageGrid() {
     ImageViewerTheme {
-        ImageGrid(
-            modifier = Modifier
-                .fillMaxSize()
-        )
+        Surface {
+            ImageGrid(
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
     }
 }

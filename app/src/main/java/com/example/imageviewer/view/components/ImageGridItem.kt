@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -80,11 +81,12 @@ fun ImageStateIcon(modifier: Modifier = Modifier, icon: ImageStateIcon) {
     val iconSize = remember {
         GRID_ITEM_ICON_SIZE_RATIO / (1.0f - GRID_ITEM_ICON_PADDING_RATIO)
     }
-    Image(
+    Icon(
         modifier = modifier
             .fillMaxSize(iconSize),
         painter = painterResource(id = icon.icon),
-        contentDescription = icon.name
+        contentDescription = icon.name,
+        tint = icon.tint.invoke()
     )
 }
 

@@ -6,14 +6,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.view.values.BottomBarIcon
 import com.example.imageviewer.view.values.Buttons.BOTTOM_BAR_ITEMS
 import com.example.imageviewer.view.values.FIRST_PLAN_ELEVATION
 import com.example.imageviewer.view.values.HOME
-import com.example.imageviewer.view.ui.theme.DarkGray
-import com.example.imageviewer.view.ui.theme.ImageViewerTheme
-import com.example.imageviewer.view.ui.theme.Orange
-import com.example.imageviewer.view.ui.theme.White
 
 
 @Composable
@@ -28,15 +25,16 @@ fun BottomBar(
         elevation = FIRST_PLAN_ELEVATION,
         shape = MaterialTheme.shapes.medium
     ) {
-        BottomNavigation(backgroundColor = MaterialTheme.colors.primary, contentColor = DarkGray) {
+        BottomNavigation(backgroundColor = MaterialTheme.colors.primary) {
             items.forEach { item ->
+                val enabled = item.enabler.invoke(selectedItem)
                 BottomNavigationItem(
-                    selected = item.label == selectedItem,
-                    icon = { Icon(painterResource(id = item.icon), item.label) },
+                    selected = enabled,
+                    icon = { Icon(painterResource(id = item.icon(enabled)), item.label) },
                     label = { Text(text = item.label) },
                     onClick = { onClick?.invoke(item.label) },
-                    selectedContentColor = Orange,
-                    unselectedContentColor = White
+                    selectedContentColor = MaterialTheme.colors.secondary,
+                    unselectedContentColor = MaterialTheme.colors.onPrimary
                 )
             }
         }

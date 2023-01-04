@@ -20,7 +20,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.imageviewer.R
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.view.components.ImagePager
+import com.example.imageviewer.view.components.composition.ImagePager
 import com.example.imageviewer.view.values.LOAD_ERROR
 import com.example.imageviewer.view.values.PROGRESS_BAR_STROKE_WIGHT
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme

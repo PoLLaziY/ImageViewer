@@ -7,8 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.imageviewer.view.components.GridWithOpenableItems
-import com.example.imageviewer.view.toAbstractList
+import com.example.imageviewer.view.components.composition.GridWithOpenableItems
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.viewModel.FavoriteScreenViewModel
 import kotlinx.coroutines.CoroutineScope

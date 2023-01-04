@@ -1,4 +1,4 @@
-package com.example.imageviewer.view.components
+package com.example.imageviewer.view.components.composition
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -9,12 +9,13 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.view.components.OpenedImage
 import com.example.imageviewer.view.values.Default
 import com.example.imageviewer.view.values.LEFT
 import com.example.imageviewer.view.values.RIGHT
@@ -66,15 +67,6 @@ fun <T, K> ((T) -> K)?.with(index: T): (() -> K)? {
     else return { this.invoke(index) }
 }
 
-@Preview("Dark ImagePager", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview("ImagePager", showBackground = true)
-@Composable
-fun ImagePagerPreview() {
-    ImageViewerTheme {
-        ImagePager()
-    }
-}
-
 fun isScrollInit(
     key: String,
     images: List<*>,
@@ -101,4 +93,16 @@ fun isScrollInit(
         return true
     }
     return false
+}
+
+
+@Preview("Dark ImagePager", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview("ImagePager", showBackground = true)
+@Composable
+fun ImagePagerPreview() {
+    ImageViewerTheme {
+        Surface {
+            ImagePager()
+        }
+    }
 }

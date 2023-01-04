@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.imageviewer.view.components.composition.GridWithOpenableItems
 import com.example.imageviewer.view.toAbstractList
 import com.example.imageviewer.view.values.FIRST_PLAN_ELEVATION
 import com.example.imageviewer.view.values.OPENED_IMAGE_BUTTON_MARGIN

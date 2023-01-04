@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -18,11 +21,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imageviewer.R
+import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.view.values.BACKGROUND_PLAN_ELEVATION
 import com.example.imageviewer.view.values.CANCEL
 import com.example.imageviewer.view.values.SEARCH
-import com.example.imageviewer.view.ui.theme.ImageViewerTheme
-import com.example.imageviewer.view.ui.theme.Orange
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -52,6 +54,9 @@ fun SearchBar(
                 if (!focus) keyboard?.hide()
             },
             value = query ?: "", onValueChange = { onTextChanged?.invoke(it) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             leadingIcon = {
                 if (focus) {
                     Icon(
@@ -60,21 +65,16 @@ fun SearchBar(
                         },
                         painter = painterResource(id = R.drawable.ic_baseline_cancel_24),
                         contentDescription = CANCEL,
-                        tint = if (focus) Orange else MaterialTheme.colors.onPrimary
+                        tint = if (focus) MaterialTheme.colors.secondary else MaterialTheme.colors.onPrimary
                     )
                 } else {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_search_24),
                         contentDescription = SEARCH,
-                        tint = if (focus) Orange else MaterialTheme.colors.onPrimary
+                        tint = if (focus) MaterialTheme.colors.secondary else MaterialTheme.colors.onPrimary
                     )
                 }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = { focusManager.clearFocus() }
-            )
+            }
         )
     }
 }

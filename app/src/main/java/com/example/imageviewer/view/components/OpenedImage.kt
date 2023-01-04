@@ -2,7 +2,6 @@ package com.example.imageviewer.view.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -13,14 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.imageviewer.R
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.view.values.*
 import com.example.imageviewer.view.values.Buttons.OPENED_IMAGE_BUTTONS
-import com.example.imageviewer.view.ui.theme.ImageViewerTheme
-import com.example.imageviewer.view.ui.theme.Orange
 
 @Composable
 fun OpenedImage(
@@ -71,7 +68,8 @@ fun ImageHolder(modifier: Modifier = Modifier, catImage: CatImage?, onCloseImage
                             OPENED_IMAGE_BUTTON_MARGIN
                         ),
                     painter = painterResource(id = R.drawable.ic_baseline_keyboard_arrow_up_24),
-                    contentDescription = ""
+                    contentDescription = "",
+                    tint = MaterialTheme.colors.onPrimary
                 )
             }
         }
@@ -103,32 +101,24 @@ fun Controller(
                             onClick = { buttonListener?.invoke(item.label) },
                             Modifier.size(OPENED_IMAGE_BUTTON_DIMEN)
                         ) {
-                            Image(
-                                modifier = Modifier.size(OPENED_IMAGE_BUTTON_DIMEN),
-                                painter = painterResource(
-                                    id = item.icon(item.enabler?.invoke(catImage))
-                                ),
-                                contentDescription = item.label
-                            )
+                            val enabler = item.enabler?.invoke(catImage)
+
+                                Icon(
+                                    modifier = Modifier.size(OPENED_IMAGE_BUTTON_DIMEN),
+                                    painter = painterResource(
+                                        id = item.icon(enabler)
+                                    ),
+                                    contentDescription = item.label,
+                                    tint = item.tint.invoke(enabler)
+                                )
+
+
                         }
                     }
                 }
                 Spacer(modifier = Modifier.height(OPENED_IMAGE_BUTTON_MARGIN))
             }
         }
-    }
-}
-
-@Composable
-fun Details() {
-    Box(
-        Modifier
-            .height(400.dp)
-            .background(color = Orange)
-            .padding(bottom = 20.dp)
-            .fillMaxWidth()
-    ) {
-
     }
 }
 
