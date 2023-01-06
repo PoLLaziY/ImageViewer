@@ -6,20 +6,21 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.imageviewer.domain.CatImage
+import com.example.imageviewer.domain.CatImageSnapshot
 
 @Dao
 interface CatImageDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(catImage: CatImage)
+    suspend fun insert(catImage: CatImageSnapshot)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(list: List<CatImage>)
+    suspend fun insert(list: List<CatImageSnapshot>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(catImage: CatImage)
+    suspend fun update(catImage: CatImageSnapshot)
 
     @Query("SELECT * FROM images ORDER BY id LIMIT :onPage OFFSET :page")
-    suspend fun allCachedImages(page: Int, onPage: Int): List<CatImage>
+    suspend fun allCachedImages(page: Int, onPage: Int): List<CatImageSnapshot>
 
     @Query(
         "SELECT * FROM images " +
@@ -37,7 +38,7 @@ interface CatImageDao {
         likedMoreThan: Long = -1,
         watchedMoreThan: Long = -1,
         alarmTimeMore: Long = -1
-    ): List<CatImage>
+    ): List<CatImageSnapshot>
 
     @Query("DELETE FROM images WHERE liked = 0 and is_favorite = 0")
     suspend fun cleanCash(): Int

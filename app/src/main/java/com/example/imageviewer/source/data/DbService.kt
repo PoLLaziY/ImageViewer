@@ -32,11 +32,11 @@ interface DbService {
 class DbServiceImpl(private val dao: CatImageDao) : DbService {
 
     override suspend fun insert(catImage: List<CatImage>) {
-        dao.insert(catImage)
+        dao.insert(catImage.map { it.snapshot })
     }
 
     override suspend fun update(catImage: CatImage) {
-        dao.update(catImage)
+        dao.update(catImage.snapshot)
     }
 
     override suspend fun clean(): Int {
@@ -58,7 +58,7 @@ class DbServiceImpl(private val dao: CatImageDao) : DbService {
             likedMoreThan,
             watchedMoreThan,
             alarmTimeMore
-        )
+        ).map { it.current }
     }
 
     override fun allImageSource(): ImageSource {
@@ -69,6 +69,7 @@ class DbServiceImpl(private val dao: CatImageDao) : DbService {
                 query: String?
             ): List<CatImage>? {
                 return dao.allCachedImages(page, onPage)
+                    .map { it.current }
             }
         }
     }
@@ -91,7 +92,7 @@ class DbServiceImpl(private val dao: CatImageDao) : DbService {
                     likedMoreThan = if (liked) 0 else -1,
                     watchedMoreThan = if (watched) 0 else -1,
                     alarmTimeMore = if (alarmed) 0 else -1
-                )
+                ).map { it.current }
             }
 
         }
