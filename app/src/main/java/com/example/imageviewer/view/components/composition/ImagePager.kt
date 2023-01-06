@@ -1,10 +1,7 @@
 package com.example.imageviewer.view.components.composition
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -16,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.view.components.OpenedImage
+import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.view.values.Default
 import com.example.imageviewer.view.values.LEFT
 import com.example.imageviewer.view.values.RIGHT
-import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,31 +30,26 @@ fun ImagePager(
     mainScope: CoroutineScope = rememberCoroutineScope { Dispatchers.Main },
     onClose: ((Int) -> Unit)? = null
 ) {
-    BoxWithConstraints(modifier.fillMaxSize()) {
-        val screen = this
-
-        LazyRow(
-            userScrollEnabled = false,
-            state = scrollState
-        ) {
-            itemsIndexed(images) { index, catImage ->
-                OpenedImage(
-                    modifier = Modifier
-                        .width(screen.maxWidth)
-                        .height(screen.maxHeight),
-                    buttonListener = {
-                        if (!isScrollInit(
-                                it,
-                                images,
-                                scrollState,
-                                mainScope
-                            )
-                        ) controlButtonListener?.invoke(it, index)
-                    },
-                    image = catImage,
-                    onCloseImage = onClose.with(index)
-                )
-            }
+    LazyRow(
+        modifier = modifier,
+        userScrollEnabled = false,
+        state = scrollState
+    ) {
+        itemsIndexed(images) { index, catImage ->
+            OpenedImage(
+                modifier = Modifier.fillParentMaxSize(),
+                buttonListener = {
+                    if (!isScrollInit(
+                            it,
+                            images,
+                            scrollState,
+                            mainScope
+                        )
+                    ) controlButtonListener?.invoke(it, index)
+                },
+                image = catImage,
+                onCloseImage = onClose.with(index)
+            )
         }
     }
 }
@@ -102,7 +94,7 @@ fun isScrollInit(
 fun ImagePagerPreview() {
     ImageViewerTheme {
         Surface {
-            ImagePager()
+            ImagePager(Modifier.fillMaxSize())
         }
     }
 }

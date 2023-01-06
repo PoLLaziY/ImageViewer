@@ -1,10 +1,13 @@
 package com.example.imageviewer.view.ui.theme
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
     primary = DarkPrimaryGray,
@@ -35,10 +38,51 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun ImageViewerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+
+    val primary: Color by animateColorAsState(
+        targetValue = if (darkTheme) DarkColorPalette.primary
+        else LightColorPalette.primary
+    )
+    val onPrimary: Color by animateColorAsState(
+        targetValue = if (darkTheme) DarkColorPalette.onPrimary
+        else LightColorPalette.onPrimary
+    )
+    val secondary by animateColorAsState(
+        targetValue = if (darkTheme) DarkColorPalette.secondary
+        else LightColorPalette.secondary
+    )
+    val onSecondary by animateColorAsState(
+        targetValue = if (darkTheme) DarkColorPalette.onSecondary
+        else LightColorPalette.onSecondary
+    )
+    val surface by animateColorAsState(
+        targetValue = if (darkTheme) DarkColorPalette.surface
+        else LightColorPalette.surface
+    )
+    val background by animateColorAsState(
+        targetValue = if (darkTheme) DarkColorPalette.background
+        else LightColorPalette.background
+    )
+
+
     val colors = if (darkTheme) {
-        DarkColorPalette
+        DarkColorPalette.copy(
+            primary = primary,
+            onPrimary = onPrimary,
+            secondary = secondary,
+            onSecondary = onSecondary,
+            surface = surface,
+            background = background
+        )
     } else {
-        LightColorPalette
+        LightColorPalette.copy(
+            primary = primary,
+            onPrimary = onPrimary,
+            secondary = secondary,
+            onSecondary = onSecondary,
+            surface = surface,
+            background = background
+        )
     }
 
     MaterialTheme(
