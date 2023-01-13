@@ -2,12 +2,13 @@ package com.example.imageviewer.view
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,10 +22,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.imageviewer.R
 import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.view.components.composition.ImagePager
-import com.example.imageviewer.view.values.LOAD_ERROR
-import com.example.imageviewer.view.values.PROGRESS_BAR_STROKE_WIGHT
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
 import com.example.imageviewer.view.ui.theme.Orange
+import com.example.imageviewer.view.values.LOAD_ERROR
+import com.example.imageviewer.view.values.PROGRESS_BAR_STROKE_WIGHT
 import com.example.imageviewer.viewModel.HomeScreenViewModel
 
 @Composable
@@ -35,12 +36,15 @@ fun HomeScreen(
     val viewModel: HomeScreenViewModel = homeScreenViewModel ?: viewModel()
     val imagesPagingData = viewModel.images.collectAsLazyPagingItems()
     val context = LocalContext.current
+
     when (imagesPagingData.loadState.refresh) {
         LoadState.Loading -> {
             LoadingProgressBar(modifier)
         }
         is LoadState.Error -> {
-            ErrorHolder(modifier)
+            ErrorHolder(modifier) {
+                imagesPagingData.refresh()
+            }
         }
         else -> {
             val list = imagesPagingData.toAbstractList()
@@ -81,8 +85,15 @@ fun LoadingProgressBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorHolder(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
+fun ErrorHolder(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .clickable(onClick = onClick)
+    ) {
         Column(
             modifier = Modifier
                 .wrapContentSize()

@@ -1,6 +1,7 @@
 package com.example.imageviewer.view.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,9 +10,11 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -20,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.imageviewer.R
 import com.example.imageviewer.domain.CatImage
-import com.example.imageviewer.view.values.*
 import com.example.imageviewer.view.ui.theme.ImageViewerTheme
+import com.example.imageviewer.view.values.*
 
 const val GRID_ITEM_ICON_PADDING_RATIO = 0.05f
 const val GRID_ITEM_ICON_SIZE_RATIO = 0.2f
@@ -64,9 +67,15 @@ fun ImageGridItem(
                     .align(Alignment.Center)
             ) {
                 imageStateIcons.forEach {
-                    if (it.enabler(catImage)) {
-                        ImageStateIcon(modifier = Modifier.align(it.alignment), icon = it)
-                    }
+                    
+                    val isEnabled = it.enabler(catImage)
+                    val alpha by animateFloatAsState(targetValue = if (isEnabled) 1f else 0f)
+                    ImageStateIcon(
+                        modifier = Modifier
+                            .align(it.alignment)
+                            .alpha(alpha),
+                        icon = it
+                    )
                 }
             }
 

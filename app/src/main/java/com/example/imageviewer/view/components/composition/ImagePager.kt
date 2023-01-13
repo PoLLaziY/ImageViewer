@@ -1,12 +1,16 @@
 package com.example.imageviewer.view.components.composition
 
 import android.content.res.Configuration
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Surface
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
