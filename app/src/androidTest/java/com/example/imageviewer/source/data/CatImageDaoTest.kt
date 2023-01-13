@@ -1,6 +1,7 @@
 package com.example.imageviewer.source.data
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -18,6 +19,7 @@ class CatImageDaoTest {
     var context: Context? = null
     var db: CatImageRoomDb? = null
     var dao: CatImageDao? = null
+    //val main = newSingleThreadContext("MyUIThread")
 
     @Before
     fun initTests() {
@@ -28,7 +30,7 @@ class CatImageDaoTest {
         )
             .allowMainThreadQueries().build()
         dao = db?.catImageDao() ?: return
-        Dispatchers.setMain(newSingleThreadContext("MyUIThread"))
+        //Dispatchers.setMain(main)
     }
 
     @After
@@ -38,6 +40,7 @@ class CatImageDaoTest {
             dao?.cleanFavorite()
             db?.close()
         }
+
     }
 
     @Test
@@ -48,6 +51,7 @@ class CatImageDaoTest {
             val image = dao?.getImages(0, 1)?.get(0) ?: assert(false)
             assert(catImageSnapShot == image)
         }
+
     }
 
     @Test
@@ -58,6 +62,7 @@ class CatImageDaoTest {
             val images = dao?.getImages(0, list.size)
             assert(list.all { images?.contains(it) ?: false })
         }
+
     }
 
 
@@ -71,6 +76,7 @@ class CatImageDaoTest {
             val images = dao?.getImages(0, 2)
             assert(images?.size == 1 && images[0] == image2)
         }
+
     }
 
     @Test
@@ -83,6 +89,7 @@ class CatImageDaoTest {
             val images = dao?.getImages(0, 2)
             assert(images?.size == 1 && images[0] == image1)
         }
+
     }
 
     @Test
@@ -100,6 +107,7 @@ class CatImageDaoTest {
             val images2 = dao?.getImages(0, 50)
             assert(images2?.size == 3 && images2.all { it.favorite > 0 || it.liked > 0 })
         }
+
     }
 
     @Test
@@ -115,8 +123,10 @@ class CatImageDaoTest {
             dao?.insert(images)
             dao?.cleanFavorite()
             val images2 = dao?.getImages(0, 50)
-            assert(images2?.size == 1 && images2.all { it.favorite < 1 || it.liked < 1 })
+            Log.i("VVV", images2.toString())
+            assert(images2?.size == 1 && images2.all { it.favorite < 1 && it.liked < 1 })
         }
+
     }
 
     @Test(timeout = 2000)
@@ -144,6 +154,7 @@ class CatImageDaoTest {
                     listener?.removeObserver(observer ?: return@runBlocking)
                     assert(true)
                 }
+
             }
         }
 
@@ -156,6 +167,39 @@ class CatImageDaoTest {
             dao?.insert(image)
             dao?.cleanCash()
             dao?.update(images[0].copy(liked = 0, favorite = 0))
+            CoroutineScope(Dispatchers.Main).launch {
+                listener?.removeObserver(observer)
+            }
+        }
+    }
+
+    @Test
+    fun testGetImage() {
+        val image = Default.PREVIEW_CAT_IMAGE.snapshot
+        val images = mutableListOf(
+            image.copy(id = "1", favorite = 1, liked = 1, alarmTime = 0, watched = 0),
+            image.copy(id = "2", favorite = 1, liked = 0, alarmTime = 0, watched = 0),
+            image.copy(id = "3", favorite = 0, liked = 1, alarmTime = 0, watched = 0),
+            image.copy(id = "4", favorite = 0, liked = 0, alarmTime = 0, watched = 1),
+            image.copy(id = "5", favorite = 0, liked = 0, alarmTime = 1, watched = 0)
+        )
+
+        runBlocking {
+            dao?.insert(images)
+            val listAll = dao?.getImages(0, 50)
+            val listFavorite = dao?.getImages(0, 50, favoriteMoreThan = 0)
+            val listLiked = dao?.getImages(0, 50, likedMoreThan = 0)
+            val listWatched = dao?.getImages(0, 50, watchedMoreThan = 0)
+            val listAlarmed = dao?.getImages(0, 50, alarmTimeMore = 0)
+            Log.i("VVV", listAll.toString())
+
+            assert(
+                listAll?.size == 5 &&
+                        listFavorite?.size == 2 && listFavorite.all { it.favorite > 0 } &&
+                        listLiked?.size == 2 && listLiked.all { it.liked > 0 } &&
+                        listWatched?.size == 1 && listWatched.all { it.watched > 0 } &&
+                        listAlarmed?.size == 1 && listAlarmed.all { it.alarmTime > 0 }
+            )
         }
     }
 }

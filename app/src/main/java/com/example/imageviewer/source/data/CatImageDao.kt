@@ -42,7 +42,7 @@ interface CatImageDao {
     @Query("DELETE FROM images WHERE liked = 0 and is_favorite = 0")
     suspend fun cleanCash(): Int
 
-    @Query("DELETE FROM images WHERE liked = 1 and is_favorite = 1")
+    @Query("DELETE FROM images WHERE liked = 1 or is_favorite = 1")
     suspend fun cleanFavorite(): Int
 
     @Query("SELECT is_favorite FROM images LIMIT 1")

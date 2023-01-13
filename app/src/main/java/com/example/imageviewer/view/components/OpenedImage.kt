@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberAsyncImagePainter
@@ -91,7 +92,8 @@ fun Controller(
         backgroundColor = MaterialTheme.colors.primary,
         elevation = CONTROL_PANEL_PLAN_ELEVATION
     ) {
-        Column() {
+        val context = LocalContext.current
+        Column {
             Spacer(modifier = Modifier.height(OPENED_IMAGE_BUTTON_MARGIN))
             buttonList.forEach { list ->
                 Row(
@@ -100,7 +102,13 @@ fun Controller(
                 ) {
                     list.forEach { item ->
                         IconButton(
-                            onClick = { buttonListener?.invoke(item.label) },
+                            onClick = {
+                                when (item.label) {
+                                    SHARE -> ContextHelper.shareImage(context, catImage)
+                                    SAVE -> ContextHelper.loadImage(context, catImage)
+                                    else -> buttonListener?.invoke(item.label)
+                                }
+                            },
                             Modifier.size(OPENED_IMAGE_BUTTON_DIMEN)
                         ) {
                             val isEnable = item.enabler?.invoke(catImage)
