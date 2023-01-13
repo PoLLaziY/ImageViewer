@@ -14,7 +14,7 @@ object Default {
 
     val PREVIEW_CAT_IMAGES: List<CatImage> = mutableListOf<CatImage>().apply {
         repeat(20) {
-            this.add(PREVIEW_CAT_IMAGE)
+            this.add(PREVIEW_CAT_IMAGE.copy(id = it.toString()))
         }
     }
 }

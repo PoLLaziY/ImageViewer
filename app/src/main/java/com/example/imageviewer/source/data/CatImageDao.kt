@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.imageviewer.domain.CatImage
 import com.example.imageviewer.domain.CatImageSnapshot
 
 @Dao
@@ -43,7 +42,7 @@ interface CatImageDao {
     @Query("DELETE FROM images WHERE liked = 0 and is_favorite = 0")
     suspend fun cleanCash(): Int
 
-    @Query("DELETE FROM images WHERE is_favorite = 1")
+    @Query("DELETE FROM images WHERE liked = 1 and is_favorite = 1")
     suspend fun cleanFavorite(): Int
 
     @Query("SELECT is_favorite FROM images LIMIT 1")

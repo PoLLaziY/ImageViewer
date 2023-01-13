@@ -1,6 +1,7 @@
 package com.example.imageviewer.view.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -28,7 +29,7 @@ fun OpenedImage(
 ) {
     Column(
         modifier = modifier
-            //.verticalScroll(state = rememberScrollState())
+        //.verticalScroll(state = rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(OPENED_IMAGE_PADDING))
         ImageHolder(Modifier.weight(1f), image, onCloseImage)
@@ -60,7 +61,8 @@ fun ImageHolder(modifier: Modifier = Modifier, catImage: CatImage?, onCloseImage
             )
             if (onCloseImage != null) IconButton(
                 modifier = Modifier.align(Alignment.TopCenter),
-                onClick = onCloseImage) {
+                onClick = onCloseImage
+            ) {
                 Icon(
                     modifier = Modifier
                         .size(OPENED_IMAGE_BUTTON_DIMEN)
@@ -101,16 +103,16 @@ fun Controller(
                             onClick = { buttonListener?.invoke(item.label) },
                             Modifier.size(OPENED_IMAGE_BUTTON_DIMEN)
                         ) {
-                            val enabler = item.enabler?.invoke(catImage)
-
-                                Icon(
-                                    modifier = Modifier.size(OPENED_IMAGE_BUTTON_DIMEN),
-                                    painter = painterResource(
-                                        id = item.icon(enabler)
-                                    ),
-                                    contentDescription = item.label,
-                                    tint = item.tint.invoke(enabler)
-                                )
+                            val isEnable = item.enabler?.invoke(catImage)
+                            val tint by animateColorAsState(targetValue = item.tint(isEnable))
+                            Icon(
+                                modifier = Modifier.size(OPENED_IMAGE_BUTTON_DIMEN),
+                                painter = painterResource(
+                                    id = item.icon(isEnable)
+                                ),
+                                contentDescription = item.label,
+                                tint = tint
+                            )
 
 
                         }
