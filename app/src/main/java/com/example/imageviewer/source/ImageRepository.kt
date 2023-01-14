@@ -24,13 +24,16 @@ class ImageRepository(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     init {
-        webService.loadedImages.observeForever {
-            scope.launch {
-                dbService.insert(it)
+        scope.launch(Dispatchers.Main) {
+            webService.loadedImages.observeForever {
+                scope.launch {
+                    dbService.insert(it)
+                }
             }
-        }
-        dbService.dbUpdate.observeForever {
-            favoriteImagesFactory?.invalidate()
+            dbService.dbUpdate.observeForever {
+                favoriteImagesFactory?.invalidate()
+            }
+
         }
     }
 
@@ -75,7 +78,7 @@ class ImageRepository(
     }
 
     private var newImagesSourceFactory: CatImagePagingSource? = null
-    fun newImagesSourceFactory(onLoadNull: (() -> Unit)? = null): CatImagePagingSource  {
+    fun newImagesSourceFactory(onLoadNull: (() -> Unit)? = null): CatImagePagingSource {
         newImagesSourceFactory = CatImagePagingSource(
             webService.imageSource(searchAlgorithm),
             onSourceReturnNull = onLoadNull
@@ -120,6 +123,13 @@ class ImageRepository(
         watchedMoreThan: Long = -1,
         alarmTimeMore: Long = -1
     ): List<CatImage> {
-        return dbService.getImages(page, onPage, favoriteMoreThan, likedMoreThan, watchedMoreThan, alarmTimeMore)
+        return dbService.getImages(
+            page,
+            onPage,
+            favoriteMoreThan,
+            likedMoreThan,
+            watchedMoreThan,
+            alarmTimeMore
+        )
     }
 }

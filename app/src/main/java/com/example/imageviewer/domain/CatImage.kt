@@ -16,18 +16,26 @@ import kotlinx.parcelize.Parcelize
 class CatImage(
     val id: String = "",
     val url: String? = null,
-    favorite: Long,
-    liked: Long,
-    watched: Long,
-    alarmTime: Long,
+    favorite: Long = 0,
+    liked: Long = 0,
+    watched: Long = 0,
+    alarmTime: Long = 0,
     val breeds: ArrayList<Breed>? = null,
     val categories: ArrayList<Category>? = null
 ) {
+    fun copy(id: String): CatImage {
+        return CatImage(
+            id = id,
+            url, favorite, liked, watched, alarmTime, breeds, categories
+        )
+    }
+
     var favorite: Long by mutableStateOf(favorite)
     var liked: Long by mutableStateOf(liked)
     var watched: Long by mutableStateOf(watched)
     var alarmTime: Long by mutableStateOf(alarmTime)
 
+    //Get new Snapshot
     val snapshot: CatImageSnapshot
         get() = CatImageSnapshot(
             breeds,
@@ -54,9 +62,10 @@ data class CatImageSnapshot @JvmOverloads constructor(
     @ColumnInfo(name = "liked") val liked: Long,
     @ColumnInfo(name = "watched") val watched: Long,
     @ColumnInfo(name = "alarm_time") val alarmTime: Long,
-    @Ignore @IgnoredOnParcel var _current: CatImage? = null
+    @Ignore @IgnoredOnParcel private var _current: CatImage? = null
 ) : Parcelable {
 
+    //Get or create current CatImage
     @IgnoredOnParcel
     val current: CatImage
         get() {
@@ -64,4 +73,14 @@ data class CatImageSnapshot @JvmOverloads constructor(
                 CatImage(id, url, favorite, liked, watched, alarmTime, breeds, categories)
             return _current!!
         }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is CatImageSnapshot) return false
+        return other.alarmTime == this.alarmTime
+                && other.liked == this.liked
+                && other.favorite == this.favorite
+                && other.watched == this.watched
+                && other.url == this.url
+                && other.id == this.id
+    }
 }
