@@ -68,7 +68,6 @@ object ContextHelper {
             if (image.alarmTime == 0L) alarmManager.cancel(pendingIntent)
             else alarmManager.set(AlarmManager.RTC, time, pendingIntent)
 
-            Log.i("VVV", "Broadcast create")
         }
     }
 
@@ -138,7 +137,6 @@ object ContextHelper {
                                 val time = Calendar.getInstance().apply {
                                     set(y, m, d, h, min)
                                 }
-                                Log.i("AlarmSet", "Alarm send ${time.timeInMillis}")
                                 it.resume(time)
                             },
                             calendar.get(Calendar.HOUR_OF_DAY),
@@ -149,7 +147,6 @@ object ContextHelper {
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)
                 ).show()
-                Log.i("AlarmSet", "AfterPick")
             }
         }
     }

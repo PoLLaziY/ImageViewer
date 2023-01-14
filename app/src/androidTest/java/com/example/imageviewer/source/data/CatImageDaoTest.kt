@@ -123,7 +123,6 @@ class CatImageDaoTest {
             dao?.insert(images)
             dao?.cleanFavorite()
             val images2 = dao?.getImages(0, 50)
-            Log.i("VVV", images2.toString())
             assert(images2?.size == 1 && images2.all { it.favorite < 1 && it.liked < 1 })
         }
 
@@ -191,7 +190,6 @@ class CatImageDaoTest {
             val listLiked = dao?.getImages(0, 50, likedMoreThan = 0)
             val listWatched = dao?.getImages(0, 50, watchedMoreThan = 0)
             val listAlarmed = dao?.getImages(0, 50, alarmTimeMore = 0)
-            Log.i("VVV", listAll.toString())
 
             assert(
                 listAll?.size == 5 &&

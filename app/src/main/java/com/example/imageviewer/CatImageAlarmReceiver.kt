@@ -11,7 +11,6 @@ import com.example.imageviewer.view.values.ContextHelper
 class CatImageAlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, p1: Intent?) {
-        Log.i("VVV", "BroadcastStart")
 
         if (p1?.action != ContextHelper.CAT_IMAGE_ALARM) return
 
